@@ -1,0 +1,11 @@
+
+
+{"level":"info","url":"/api/admin/multiple/place/order","method":"POST","status":true,"userId":null,"data":{"msg":"Processing user for broker order","userId":23,"brokerName":"finvasia"},"message":"API Request Completed","timestamp":"2026-01-09 14:08:57"}
+{"level":"info","url":"/api/admin/multiple/place/order","method":"POST","status":true,"userId":null,"data":{"msg":"Starting Finvasia order placement","userId":23,"transactionType":"BUY","uid":"FN169676"},"message":"API Request Completed","timestamp":"2026-01-09 14:08:57"}
+{"level":"info","url":"/api/admin/multiple/place/order","method":"POST","status":true,"userId":null,"data":{"msg":"Checking for existing BUY order for merge","userId":23,"symbol":"YESBANK"},"message":"API Request Completed","timestamp":"2026-01-09 14:08:57"}
+{"level":"info","url":"/api/admin/multiple/place/order","method":"POST","status":true,"userId":null,"data":{"msg":"Creating pending order in database","orderData":{"symbol":"YESBANK","quantity":1,"transactionType":"BUY"}},"message":"API Request Completed","timestamp":"2026-01-09 14:08:57"}
+{"level":"info","url":"/api/admin/multiple/place/order","method":"POST","status":true,"userId":null,"data":{"msg":"Pending order created successfully","orderId":914},"message":"API Request Completed","timestamp":"2026-01-09 14:08:57"}
+{"level":"error","url":"/api/admin/multiple/place/order","method":"POST","status":false,"userId":null,"data":{"msg":"Broker order execution failed inside map","userId":23,"brokerName":"finvasia"},"message":"Cannot access 'jData' before initialization","timestamp":"2026-01-09 14:08:57"}
+{"level":"info","url":"/api/admin/multiple/place/order","method":"POST","status":true,"userId":null,"data":{"msg":"All broker promises settled","total":1},"message":"API Request Completed","timestamp":"2026-01-09 14:08:57"}
+{"level":"error","url":"/api/admin/multiple/place/order","method":"POST","status":false,"userId":null,"data":{"msg":"Broker order rejected","userId":23,"broker":"finvasia"},"message":"Cannot access 'jData' before initialization","timestamp":"2026-01-09 14:08:57"}
+{"level":"info","url":"/api/admin/multiple/place/order","method":"POST","status":true,"userId":null,"data":{"msg":"Emitting order update event"},"message":"API Request Completed","timestamp":"2026-01-09 14:08:57"}

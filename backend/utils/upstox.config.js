@@ -1,0 +1,12 @@
+
+export const UPSTOX_CONFIG = {
+
+  BASE_URL: process.env.UPSTOX_TEST_BASE_URL,
+
+  API_KEY: process.env.UPSTOX_TEST_API_KEY,
+
+  API_SECRET:process.env.UPSTOX_TEST_API_SECRET,
+
+  ACCESS_TOKEN: process.env.UPSTOX_TEST_ACCESS_TOKEN,
+};
+

@@ -1,0 +1,1 @@
+{"level":"error","datetime":"2026-02-02T07:21:32.025Z","message":"get_funds response","data":{"code":-16,"message":"Could not authenticate the user","s":"error"},"functionName":"get_funds"}

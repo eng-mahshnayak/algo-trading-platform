@@ -1,0 +1,70 @@
+/* DynamicPopup.css */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.dynamic-popup-container {
+  position: relative;
+  max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.popup-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: white;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.popup-close-btn:hover {
+  background: #f0f0f0;
+  transform: rotate(90deg);
+  transition: all 0.3s ease;
+}
+
+.popup-close-bottom-btn {
+  width: calc(100% - 60px);
+  margin: 20px 30px 30px 30px;
+  padding: 12px;
+  background: #f0f0f0;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.popup-close-bottom-btn:hover {
+  background: #e0e0e0;
+}
+
+/* Scrollbar styling */
+.dynamic-popup-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.dynamic-popup-container::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.dynamic-popup-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+}
