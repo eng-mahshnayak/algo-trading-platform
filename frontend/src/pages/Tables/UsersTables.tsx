@@ -324,6 +324,130 @@ export default function UsersTables() {
     }
   };
 
+   const startInstance = async (user: User) => {
+    try {
+
+    // Show loading toast
+    const loadingToastId = toast.loading("Starting instance... Please wait");
+
+      const response = await axios.get(`${API_URL}/awsadmin/aws/start-instance/${user.id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          UserId: user.id,
+        },
+      });
+
+      // Dismiss loading toast
+      toast.dismiss(loadingToastId);
+      
+      console.log(response.data,'=================response.data===========');
+
+      const data = response.data;
+
+      if (data.success === true) {
+         toast.success(`Instance ${data.data.state} !`);
+      } else {
+        toast.error(data?.data?.error || "Failed to fetch tokens");
+      }
+    } catch (error: any) {
+      toast.error(error?.message || "Something went wrong");
+    }
+  };
+
+    const handleRowLogin = async (user: User) => {
+    try {
+      const { data } = await axios.get(
+        `${API_URL}/admin/login/totp/angelone`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+            userId: `${user.id}`,
+          },
+        }
+      );
+
+      if (data.status === true) {
+        let angel_auth_token = data.data.jwtToken;
+        let angel_refresh_token = data.data.refreshToken;
+        let angel_feed_token = data.data.feedToken;
+
+        localStorage.setItem("angel_token", angel_auth_token);
+        localStorage.setItem("angel_feed_token", angel_refresh_token);
+        localStorage.setItem("angel_refresh_token", angel_feed_token);
+        localStorage.setItem("userID", String(user.id));
+
+        toast.success("Login Successful in AngelOne!");
+      } else {
+        toast.error(data.message);
+      }
+    } catch (error: any) {
+      toast.error(error.message);
+    }
+  };
+
+    const stopInstance = async (user: User) => {
+    try {
+
+                // Show loading toast
+    const loadingToastId = toast.loading("Stoping instance... Please wait");
+
+      const response = await axios.get(`${API_URL}/awsadmin/aws/stop-instance/${user.id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          UserId: user.id,
+        },
+      });
+
+       // Dismiss loading toast
+      toast.dismiss(loadingToastId);
+
+
+
+      const data = response.data;
+
+      console.log(data,'=================response.data===========');
+
+      if (data.success === true) {
+         toast.success(`Instance ${data.data.state} !`);
+      } else {
+        toast.error(data?.data?.error || "Failed to fetch tokens");
+      }
+    } catch (error: any) {
+      toast.error(error?.message || "Something went wrong");
+    }
+  };
+
+  const deleteInstance= async (user: User) => {
+    try {
+
+                // Show loading toast
+    const loadingToastId = toast.loading("Deleting instance... Please wait");
+
+      const response = await axios.delete(`${API_URL}/awsadmin/aws/delete-instance/${user.id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          UserId: user.id,
+        },
+      });
+
+      
+  // Dismiss loading toast
+      toast.dismiss(loadingToastId);
+
+      const data = response.data;
+
+        console.log(data,'=================response.data===========');
+
+      if (data.success === true) {
+         toast.success(`Instance Deleted `);
+      } else {
+        toast.error(data?.data?.error || "Failed to fetch tokens");
+      }
+    } catch (error: any) {
+      toast.error(error?.message || "Something went wrong");
+    }
+  };
+
   const fetchStrategies = async () => {
     try {
       const res = await axios.get(`${API_URL}/admin/strategies`, {
@@ -580,14 +704,31 @@ export default function UsersTables() {
         <FiEdit className="h-4 w-4" /><span>Update Profile</span>
       </button>
       <div className="border-t border-gray-100 my-1"></div>
-      <button onClick={() => { handleAssignPackage(user); setOpenMenuId(null); }}
+      <button onClick={() => { handleRowLogin(user); setOpenMenuId(null); }}
         className="flex items-center gap-2 w-full text-left px-4 py-3 hover:bg-indigo-50 transition-colors text-gray-700 hover:text-indigo-600">
-        <FiPackage className="h-4 w-4" /><span>Assign Package</span>
+        <FiPackage className="h-4 w-4" /><span>Login User</span>
       </button>
-      <button onClick={() => { window.open(`${import.meta.env.VITE_API_URL_FORNTEND}/admincheckuser/deshboard?userId=${user.id}`, "_blank"); setOpenMenuId(null); }}
+      {/* <button onClick={() => { window.open(`${import.meta.env.VITE_API_URL_FORNTEND}/admincheckuser/deshboard?userId=${user.id}`, "_blank"); setOpenMenuId(null); }}
         className="flex items-center gap-2 w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors text-gray-700 hover:text-gray-900">
         <FiHome className="h-4 w-4" /><span>View Dashboard</span>
+      </button> */}
+
+      <button onClick={() => { startInstance(user); setOpenMenuId(null); }}
+        className="flex items-center gap-2 w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors text-gray-700 hover:text-blue-600">
+        <FiKey className="h-4 w-4" /><span>Instance Start</span>
       </button>
+
+       <button onClick={() => {   stopInstance(user); setOpenMenuId(null); }}
+        className="flex items-center gap-2 w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors text-gray-700 hover:text-blue-600">
+        <FiKey className="h-4 w-4" /><span>Instance Stop</span>
+      </button>
+
+        <button onClick={() => { deleteInstance(user); setOpenMenuId(null); }}
+        className="flex items-center gap-2 w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors text-gray-700 hover:text-blue-600">
+        <FiKey className="h-4 w-4" /><span>Instance Delete</span>
+      </button>
+
+
     </div>
   );
 

@@ -179,16 +179,18 @@ CLIENT_LOCAL_IP:{
     allowNull: true
 },
 riskMngtActive: {
-  type: Boolean,
-  default: false
+  type: DataTypes.BOOLEAN,
+  defaultValue: false,
 },
+
 riskLimit: {
-  type: Number,
-  default: 0
+  type: DataTypes.INTEGER,
+  defaultValue: 0,
 },
+
 showPopup: {
-  type: Boolean,
-  default: false
+  type: DataTypes.BOOLEAN,
+  defaultValue: false,
 },
 popupHtmlContent: {
   type: DataTypes.TEXT,

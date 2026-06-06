@@ -26,9 +26,9 @@ router.get('/instance/create',CreateInstanceInAws)
 
 
 // In your routes fil . =================new code  start =====================
-router.post('/aws/stop-instance', StopInstanceInAws);
-router.post('/aws/start-instance', StartInstanceInAws);
-router.delete('/aws/delete-instance', DeleteInstanceInAws);
+router.get('/aws/stop-instance/:id', StopInstanceInAws);
+router.get('/aws/start-instance/:id', StartInstanceInAws);
+router.delete('/aws/delete-instance/:id', DeleteInstanceInAws);
 router.get('/aws/instance-status/:id', GetInstanceStatus);
 
 //   =================new code  end =====================
