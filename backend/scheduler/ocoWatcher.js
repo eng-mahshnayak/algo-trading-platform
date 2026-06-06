@@ -805,7 +805,7 @@ process.on('unhandledRejection', (error) => {
 //               totalPrice: o.totalPrice,
 //               actualQuantity: o.actualQuantity,
 //               userId: user.id,
-//               ordertag: "softwaresetu",
+//               ordertag: "aitrading",
 //               userNameId: user.username,
 //               angelOneToken: o?.angelOneToken || o.token,
 //               angelOneSymbol: o?.angelOneSymbol || o?.symbol,

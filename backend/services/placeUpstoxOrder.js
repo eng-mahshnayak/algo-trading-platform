@@ -496,7 +496,7 @@ export const placeUpstoxOrder = async (user, reqInput, req) => {
 //       actualQuantity: reqInput.actualQuantity ?? null,
 //       userId: user.id,
 //       userNameId: user.username,
-//       ordertag: "softwaresetu",
+//       ordertag: "aitrading",
 //       broker: "angelone",
 //       buyOrderId: reqInput?.buyOrderId || null,
 //       strategyName: reqInput?.groupName || "",

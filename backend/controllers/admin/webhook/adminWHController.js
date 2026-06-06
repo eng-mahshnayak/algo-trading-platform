@@ -73,7 +73,7 @@ export const angelTradeWebhookController = async (req, res) => {
       clientcode,
       transactiontype: "BUY",
       status: "OPEN",
-      ordertag: "softwaresetu",
+      ordertag: "aitrading",
     });
 
     const accessToken = openBuys[0]?.accessToken || req.body.accessToken;
@@ -90,8 +90,8 @@ export const angelTradeWebhookController = async (req, res) => {
 
     orderBook.forEach((o) => {
       if (o.tradingsymbol === tradingsymbol && o.status === "complete") {
-        if (o.transactiontype === "BUY" && o.ordertag === "softwaresetu") todayBuyQty += Number(o.filledshares || 0);
-        if (o.transactiontype === "SELL" && o.ordertag === "softwaresetu") todaySellQty += Number(o.filledshares || 0);
+        if (o.transactiontype === "BUY" && o.ordertag === "aitrading") todayBuyQty += Number(o.filledshares || 0);
+        if (o.transactiontype === "SELL" && o.ordertag === "aitrading") todaySellQty += Number(o.filledshares || 0);
       }
     });
 
@@ -104,7 +104,7 @@ export const angelTradeWebhookController = async (req, res) => {
     // STEP 5: Decide if SELL is our software or user holding
     let isOurSell = false;
 
-    if (ordertag === "softwaresetu") {
+    if (ordertag === "aitrading") {
       // Our software sell (auto / manual)
       isOurSell = true;
     } else if (openBuys.length > 0 && todaySellQty >= todayBuyQty) {
@@ -137,7 +137,7 @@ export const angelTradeWebhookController = async (req, res) => {
           price: averageprice,
           pnl,
           clientcode,
-          ordertag: "softwaresetu",
+          ordertag: "aitrading",
           source: "manual/sell/webhook",
         });
       }
@@ -210,7 +210,7 @@ export const angelTradeWebhookController121 = async (req, res) => {
 
     if (
       transactiontype !== "SELL" ||
-      (status !== "complete" && orderstatus !== "complete"&&ordertag!=="softwaresetu")
+      (status !== "complete" && orderstatus !== "complete"&&ordertag!=="aitrading")
     ) {
       return res.json({ success: true });
     }
@@ -222,7 +222,7 @@ export const angelTradeWebhookController121 = async (req, res) => {
       clientcode,
       transactiontype: "BUY",
       status: "OPEN",
-      ordertag: "softwaresetu",
+      ordertag: "aitrading",
     });
 
     const accessToken =
@@ -292,7 +292,7 @@ export const angelTradeWebhookController121 = async (req, res) => {
           price: averageprice,
           pnl,
           clientcode,
-          ordertag: "softwaresetu",
+          ordertag: "aitrading",
           source: "manual/sell/webhook",
         });
       }

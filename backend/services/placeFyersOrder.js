@@ -196,7 +196,7 @@ export const placeFyersOrder = async (user, reqInput, req, isLocalDbFlow = true)
       stopPrice: reqInput.triggerPrice || 0,
       validity: reqInput.duration || "DAY",
       disclosedQty: 0,
-      orderTag: "softwaresetu",
+      orderTag: "aitrading",
       offlineOrder: false,
     };
 
@@ -584,7 +584,7 @@ export const placeFyersOrder121 = async (user, reqInput, req, isLocalDbFlow = tr
       stopPrice: reqInput.triggerPrice || 0,
       validity: reqInput.duration || "DAY",
       disclosedQty: 0,
-      orderTag:"softwaresetu",
+      orderTag:"aitrading",
       offlineOrder: false,
     };
 

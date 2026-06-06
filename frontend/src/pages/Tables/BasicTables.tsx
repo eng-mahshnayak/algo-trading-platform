@@ -7,8 +7,8 @@ export default function BasicTables() {
   return (
     <>
       <PageMeta
-        title="Software Setu"
-         description="Software Setu"
+         title="Ai Trading"
+        description="Ai Trading"
       />
       <PageBreadcrumb pageTitle="Basic Tables" />
       <div className="space-y-6">

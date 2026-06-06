@@ -2735,7 +2735,7 @@ export const placeKiteOnlineOrder = async (req, res) => {
       transaction_type: "SELL",
       quantity:"",
       product: "NRML",           // product CNC , NRML , MIS , MTF
-      tag:"softwaresetu",
+      tag:"aitrading",
       order_type:"MARKET" ,        // MARKET , LIMIT
       price: "" || 0,
       market_protection: 5,

@@ -330,7 +330,7 @@ export const placeKotakOrder = async (user, reqInput, req, sellQuantityPartial =
       actualQuantity: reqInput.actualQuantity ?? null,
       userId: user.id,
       userNameId: user.username,
-      ordertag: reqInput.ordertag || "softwaresetu",
+      ordertag: reqInput.ordertag || "aitrading",
       broker: "kotak",
       angelOneSymbol: reqInput.angelOneSymbol || reqInput.symbol,
       angelOneToken: reqInput.angelOneToken || reqInput.token,

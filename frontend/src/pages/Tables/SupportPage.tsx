@@ -14,10 +14,10 @@ const SupportPage = () => {
   const API_URL = import.meta.env.VITE_API_URL;
 
   const [support, setSupport] = useState({
-    phone: "9770435842",
-    whatsapp: "9770435842",
-    email: "info@softwaresetu.com",
-    website: "www.softwaresetu.com",
+    phone: "",
+    whatsapp: "",
+    email: "",
+    website: "",
   });
 
   const [loading, setLoading] = useState(true);

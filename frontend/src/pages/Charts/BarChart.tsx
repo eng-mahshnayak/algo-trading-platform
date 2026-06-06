@@ -7,8 +7,8 @@ export default function BarChart() {
   return (
     <div>
       <PageMeta
-        title="Software Setu"
-          description="Software Setu"
+        title="Ai Trading"
+          description="Ai Trading"
       />
       <PageBreadcrumb pageTitle="Bar Chart" />
       <div className="space-y-6">

@@ -927,7 +927,7 @@ export const placeGrowwOrder = async (
 //         product: reqInput.product || "CNC",
 //         order_type: reqInput.order_type,
 //         transaction_type: reqInput.transaction_type,
-//         order_reference_id: `softwaresetu`,
+//         order_reference_id: `aitrading`,
 //       },
 //       {
 //         headers: {

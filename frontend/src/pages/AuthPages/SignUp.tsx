@@ -9,7 +9,7 @@ export default function SignUp() {
 
     const apiUrl = import.meta.env.VITE_API_URL;
 
-    const [platformTitle, setPlatformTitle] = useState("Software Setu");
+    const [platformTitle, setPlatformTitle] = useState("");
 
 useEffect(() => {
 

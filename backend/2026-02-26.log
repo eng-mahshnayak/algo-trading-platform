@@ -1,3 +1,0 @@
-{"level":"debug","datetime":"2026-02-26T09:51:49.207Z","message":"place_order response","data":{"code":-99,"message":"ORA:Product NRML not enabled on exchange NSE","s":"error","id":"26022600544368"},"functionName":"place_order"}
-{"level":"debug","datetime":"2026-02-26T09:55:39.315Z","message":"place_order response","data":{"code":-99,"message":"ORA:Product NRML not enabled on exchange NSE","s":"error","id":"26022600546173"},"functionName":"place_order"}
-{"level":"debug","datetime":"2026-02-26T09:55:53.028Z","message":"place_order response","data":{"code":-99,"message":"RED:'MIS' Orders are disallowed after system square off","s":"error","id":"26022600546281"},"functionName":"place_order"}

@@ -8,7 +8,7 @@ export default function LineChart() {
     <>
       <PageMeta
         title="Chart Dashboard"
-          description="Software Setu"
+          description="Ai Trading"
       />
       <PageBreadcrumb pageTitle="Line Chart" />
       <div className="space-y-6">

@@ -409,7 +409,7 @@ export const placeKiteOrder = async (user, reqInput, req, useMappings = true) =>
       userId: user.id,
       userNameId: user.username,
       broker: "kite",
-      ordertag: "softwaresetu",
+      ordertag: "aitrading",
       buyOrderId: reqInput?.buyOrderId || null,
       strategyName: reqInput?.groupName || "",
       strategyUniqueId: reqInput?.strategyUniqueId || "",
@@ -466,7 +466,7 @@ export const placeKiteOrder = async (user, reqInput, req, useMappings = true) =>
         product: kiteProductType,
         order_type: reqInput.orderType,
         price: Number(reqInput.price || 0),
-        tag: "softwaresetu",
+        tag: "aitrading",
       });
 
       logSuccess(req, {
@@ -1172,7 +1172,7 @@ async function kiteFIFOWithAPI1(kite, symbol) {
 //       userId: user.id,
 //       userNameId: user.username,
 //       broker: "kite",
-//       ordertag: "softwaresetu",
+//       ordertag: "aitrading",
 //       buyOrderId: reqInput?.buyOrderId || null,
 //       strategyName: reqInput?.groupName || "",
 //       strategyUniqueId: reqInput?.strategyUniqueId || "",
@@ -1192,7 +1192,7 @@ async function kiteFIFOWithAPI1(kite, symbol) {
 //         product: kiteProductType,
 //         order_type: reqInput.orderType,
 //         price: Number(reqInput.price || 0),
-//         tag: "softwaresetu",
+//         tag: "aitrading",
 //       });
 //     } catch (err) {
 //       await newOrder.update({

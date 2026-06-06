@@ -82,7 +82,7 @@ export default function App() {
 
  const API_URL = import.meta.env.VITE_API_URL;
 
- const [title, setTitle] = useState("Software Setu");
+ const [title, setTitle] = useState("");
 
 
  console.log(title);
@@ -104,11 +104,11 @@ export default function App() {
        console.log(res,'resresresres');
 
       const software_title = res?.data?.data?.software_title;
-        const software_logo = res?.data?.data?.software_logo;
+       
 
        
         
-       localStorage.setItem("platformlogo", software_logo);
+      
        localStorage.setItem("platformtitle", software_title);
 
       if (software_title) {
@@ -122,10 +122,10 @@ export default function App() {
 
   // fetchLogo();
 
-   const software_logo = localStorage.getItem("platformlogo");
+  
    const software_title = localStorage.getItem("platformtitle");
 
-    if (software_logo&&software_title) {
+    if (software_title) {
         setTitle(software_title);
         document.title = software_title
   } else {

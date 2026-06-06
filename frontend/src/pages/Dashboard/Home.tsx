@@ -6,7 +6,7 @@ import PageMeta from "../../components/common/PageMeta";
 import TradeChart from "../../components/ecommerce/TradeChart"
 
 export default function Home() {
-  const [platformTitle, setPlatformTitle] = useState("Software Setu");
+  const [platformTitle, setPlatformTitle] = useState("");
 
   useEffect(() => {
     const storedTitle = localStorage.getItem("platformtitle");

@@ -10,8 +10,8 @@ export default function User() {
   return (
     <>
       <PageMeta
-        title="Software Setu"
-        description="Software Setu"
+        title="Ai Trading"
+        description="Ai Trading"
       />
       <div className="grid grid-cols-12 gap-4 md:gap-6">
         <div className="col-span-12 space-y-6 xl:col-span-7">

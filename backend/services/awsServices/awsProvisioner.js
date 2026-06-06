@@ -250,7 +250,7 @@ const instanceDetails = await instanceSetup.getInstanceDetails(instanceId);
         throw new Error('Instance not ready within timeout');
     }
     
-    async configureNginx(instanceId, userId, domain = 'login.softwaresetu121.com') {
+    async configureNginx(instanceId, userId, domain = '') {
         const nginxConfig = `
 server {
     listen 80;
