@@ -3,8 +3,27 @@ import { Link } from "react-router";
 import PageMeta from "../../components/common/PageMeta";
 import { useState, useEffect } from "react";
 
+// Add TypeScript interfaces
+interface MarketData {
+  nifty: number;
+  sensex: number;
+  bankNifty: number;
+}
+
+interface FeatureCardProps {
+  icon: string;
+  title: string;
+  description: string;
+  color: 'blue' | 'purple' | 'emerald' | 'orange';
+}
+
+interface StatNumberProps {
+  value: string;
+  label: string;
+}
+
 export default function AITradingAsia() {
-  const [marketData, setMarketData] = useState({
+  const [marketData, setMarketData] = useState<MarketData>({
     nifty: 24500,
     sensex: 81000,
     bankNifty: 52000,
@@ -159,9 +178,9 @@ export default function AITradingAsia() {
   );
 }
 
-// Feature Card Component
-function FeatureCard({ icon, title, description, color }) {
-  const colors = {
+// Feature Card Component with proper typing
+function FeatureCard({ icon, title, description, color }: FeatureCardProps) {
+  const colors: Record<string, string> = {
     blue: "from-blue-500/10 to-blue-600/5 border-blue-200 dark:border-blue-800",
     purple: "from-purple-500/10 to-purple-600/5 border-purple-200 dark:border-purple-800",
     emerald: "from-emerald-500/10 to-emerald-600/5 border-emerald-200 dark:border-emerald-800",
@@ -177,12 +196,12 @@ function FeatureCard({ icon, title, description, color }) {
   );
 }
 
-// Stat Number Component
-function StatNumber({ value, label }) {
-  const [count, setCount] = useState(0);
+// Stat Number Component with proper typing
+function StatNumber({ value, label }: StatNumberProps) {
+  const [count, setCount] = useState<number>(0);
 
   useEffect(() => {
-    const target = parseInt(value.replace(/[^0-9]/g, ''));
+    const target = parseInt(value.replace(/[^0-9]/g, ''), 10);
     const duration = 2000;
     const step = target / (duration / 16);
     let current = 0;
