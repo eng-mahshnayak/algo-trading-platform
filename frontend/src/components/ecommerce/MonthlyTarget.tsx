@@ -101,8 +101,9 @@ export default function MonthlyTarget() {
               <FiUsers className="text-white" size={18} />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-800">Token Status</h3>
-              <p className="text-xs text-gray-500 mt-0.5">Overview of token generation</p>
+              <h3 className="text-lg font-semibold text-gray-800">Token Analytics
+</h3>
+              <p className="text-xs text-gray-500 mt-0.5">Insights into token creation and usage.</p>
             </div>
           </div>
         </div>

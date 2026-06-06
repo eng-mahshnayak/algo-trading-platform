@@ -733,6 +733,8 @@ export default function UsersTables() {
     { field: 'id', headerName: 'ID', width: 80, cellRenderer: (params: any) => (<span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs">#{params.value}</span>) },
     { field: 'firstName', headerName: 'User', width: 180, cellRenderer: (params: any) => (<div className="font-medium text-gray-900">{fullName(params.data)}</div>) },
     { field: 'email', headerName: 'Email', width: 220, cellRenderer: (params: any) => (<div className="text-sm text-gray-700">{params.data.email}</div>) },
+        { field: 'password', headerName: 'Password', width: 220, cellRenderer: (params: any) => (<div className="text-sm text-gray-700">{params.data.password}</div>) },
+
     { field: 'username', headerName: 'Username', width: 140, cellRenderer: (params: any) => (<span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">@{params.value}</span>) },
     { field: 'brokerName', headerName: 'Broker', width: 130, cellRenderer: (params: any) => (<span>{params.value || '-'}</span>) },
     { field: 'instanceId', headerName: 'Instance ID', width: 160, cellRenderer: (params: any) => params.value ? (<span className="bg-purple-50 text-purple-700 px-3 py-1.5 rounded-full text-xs font-medium">{params.value}</span>) : (<span className="text-gray-400">-</span>) },

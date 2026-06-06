@@ -66,12 +66,12 @@ const navItems: NavItem[] = [
     path: "/user/support",
     roles: ["admin", "user"],
   },
-  {
-    icon: <RiSettings5Fill size={20} />,
-    name: "Account Settings",
-    path: "/user/setting",
-    roles: ["admin", "user"],
-  },
+  // {
+  //   icon: <RiSettings5Fill size={20} />,
+  //   name: "Account Settings",
+  //   path: "/user/setting",
+  //   roles: ["admin", "user"],
+  // },
 ];
 
 const othersItems: NavItem[] = [

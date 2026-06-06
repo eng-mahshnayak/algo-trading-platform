@@ -334,7 +334,7 @@ export default function App() {
           {/* Auth Layout */}
          
           <Route path="/" element={<SignIn />} />
-          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signup/newclient" element={<SignUp />} />
           <Route path="/forgot-password" element={<ForgotPassword />} />
           <Route path="/verify-code" element={<VerifyCode />} />
           <Route path="/new-password" element={<NewPassword />} />

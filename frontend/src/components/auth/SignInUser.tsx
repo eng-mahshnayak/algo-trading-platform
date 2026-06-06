@@ -240,12 +240,14 @@ export default function SignInForm() {
                         Keep me logged in
                       </span>
                     </div>
+                      {/* Sign Up Link 
                     <Link
                       to="/forgot-password"
                       className="text-sm text-[#FB3800] hover:text-orange-600 font-medium transition"
                     >
                       Forgot password?
                     </Link>
+                    */}
                   </div>
 
                   <button
@@ -273,6 +275,7 @@ export default function SignInForm() {
                 </form>
 
                 {/* Sign Up Link */}
+                 {/* Sign Up Link 
                 <div className="mt-6 text-center">
                   <p className="text-gray-600">
                     Don't have an account?{" "}
@@ -284,6 +287,7 @@ export default function SignInForm() {
                     </Link>
                   </p>
                 </div>
+                */}
               </div>
             </div>
           </div>
