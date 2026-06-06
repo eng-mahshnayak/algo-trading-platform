@@ -1,4 +1,4 @@
-import { ArrowUpIcon, GroupIcon } from "../../icons";
+import { ArrowUpIcon } from "../../icons";
 import Badge from "../ui/badge/Badge";
 import axios from "axios";
 import { toast } from "react-toastify";

@@ -61,21 +61,21 @@ export default function SignInForm() {
     }
   };
 
-  const handleAngelOneLogin = () => {
-    window.location.href = `${apiUrl}/auth/angelone`;
-  };
+  // const handleAngelOneLogin = () => {
+  //   window.location.href = `${apiUrl}/auth/angelone`;
+  // };
 
-  const handleKiteLogin = () => {
-    window.location.href = `${apiUrl}/auth/kite`;
-  };
+  // const handleKiteLogin = () => {
+  //   window.location.href = `${apiUrl}/auth/kite`;
+  // };
 
-  const handleGrowwLogin = () => {
-    window.location.href = `${apiUrl}/auth/groww`;
-  };
+  // const handleGrowwLogin = () => {
+  //   window.location.href = `${apiUrl}/auth/groww`;
+  // };
 
-  const handleFyersLogin = () => {
-    window.location.href = `${apiUrl}/auth/fyers`;
-  };
+  // const handleFyersLogin = () => {
+  //   window.location.href = `${apiUrl}/auth/fyers`;
+  // };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-center justify-center p-4 relative overflow-hidden">

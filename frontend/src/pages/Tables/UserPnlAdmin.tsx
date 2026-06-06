@@ -17,7 +17,7 @@ import {
   FiRefreshCw,
   FiUsers,
   FiUser,
-  FiDollarSign
+
 } from "react-icons/fi";
 
 type UserPnl = {

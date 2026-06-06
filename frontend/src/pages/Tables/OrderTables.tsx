@@ -761,13 +761,13 @@ import dayjs from "dayjs";
 import "antd/dist/reset.css";
 import { toast } from "react-toastify";
 import { AgGridReact } from "ag-grid-react";
-import { ColDef } from "ag-grid-community";
+import { ColDef ,CellStyle} from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { 
   FiDownload, 
   FiSearch, 
-  FiCalendar, 
+
   FiTrendingUp, 
   FiTrendingDown,
   FiRefreshCw,
@@ -844,6 +844,9 @@ export default function OrderTables() {
   ]);
   const [searchTerm, setSearchTerm] = useState("");
   const [gridApi, setGridApi] = useState<any>(null);
+
+  console.log(gridApi);
+  
 
   const fetchOrders = async () => {
     setLoading(true);
@@ -1100,6 +1103,16 @@ export default function OrderTables() {
     return `₹${Number(params.value).toFixed(2)}`;
   };
 
+  
+  const defaultCellStyle: CellStyle = {
+  borderRight: "1px solid #e2e8f0",
+};
+
+const rightAlignCellStyle: CellStyle = {
+  borderRight: "1px solid #e2e8f0",
+  textAlign: "right",
+};
+
   const columnDefs: ColDef<Order>[] = useMemo(() => [
     {
       headerName: "Symbol",
@@ -1108,7 +1121,7 @@ export default function OrderTables() {
       sortable: true,
       width: 170,
       minWidth: 150,
-      cellStyle: { borderRight: "1px solid #e2e8f0" },
+     cellStyle: defaultCellStyle
     },
     {
       headerName: "Type",
@@ -1119,7 +1132,7 @@ export default function OrderTables() {
       width: 100,
       minWidth: 100,
       valueGetter: () => "BUY",
-      cellStyle: { borderRight: "1px solid #e2e8f0" },
+     cellStyle: defaultCellStyle
     },
     {
       headerName: "Buy Price",
@@ -1129,7 +1142,7 @@ export default function OrderTables() {
       width: 120,
       minWidth: 110,
       valueFormatter: priceFormatter,
-      cellStyle: { borderRight: "1px solid #e2e8f0", textAlign: "right" },
+    cellStyle: rightAlignCellStyle
     },
     {
       headerName: "Sell Price",
@@ -1139,7 +1152,7 @@ export default function OrderTables() {
       width: 120,
       minWidth: 110,
       valueFormatter: priceFormatter,
-      cellStyle: { borderRight: "1px solid #e2e8f0", textAlign: "right" },
+      cellStyle: rightAlignCellStyle
     },
     {
       headerName: "Traded Qty",
@@ -1149,7 +1162,7 @@ export default function OrderTables() {
       cellRenderer: quantityCellRenderer,
       width: 130,
       minWidth: 120,
-      cellStyle: { borderRight: "1px solid #e2e8f0" },
+    cellStyle: defaultCellStyle
     },
     {
       headerName: "PNL",
@@ -1159,7 +1172,7 @@ export default function OrderTables() {
       cellRenderer: pnlCellRenderer,
       width: 120,
       minWidth: 110,
-      cellStyle: { borderRight: "1px solid #e2e8f0" },
+      cellStyle: defaultCellStyle
     },
     {
       headerName: "Order ID",
@@ -1168,7 +1181,7 @@ export default function OrderTables() {
       sortable: true,
       width: 150,
       minWidth: 140,
-      cellStyle: { borderRight: "1px solid #e2e8f0" },
+      cellStyle: defaultCellStyle
     },
     {
       headerName: "Status",
@@ -1178,7 +1191,7 @@ export default function OrderTables() {
       cellRenderer: statusCellRenderer,
       width: 120,
       minWidth: 110,
-      cellStyle: { borderRight: "1px solid #e2e8f0" },
+    cellStyle: defaultCellStyle
     },
     {
       headerName: "Buy Time",
@@ -1187,7 +1200,7 @@ export default function OrderTables() {
       sortable: true,
       width: 180,
       minWidth: 160,
-      cellStyle: { borderRight: "1px solid #e2e8f0" },
+     cellStyle: defaultCellStyle
     },
     {
       headerName: "Sell Time",
@@ -1196,7 +1209,7 @@ export default function OrderTables() {
       sortable: true,
       width: 180,
       minWidth: 160,
-      cellStyle: { borderRight: "1px solid #e2e8f0" },
+    cellStyle: defaultCellStyle
     },
     {
       headerName: "Message",
@@ -1206,7 +1219,7 @@ export default function OrderTables() {
       cellRenderer: textCellRenderer,
       width: 200,
       minWidth: 180,
-      cellStyle: { borderRight: "1px solid #e2e8f0" },
+     cellStyle: defaultCellStyle
     },
   ], []);
 

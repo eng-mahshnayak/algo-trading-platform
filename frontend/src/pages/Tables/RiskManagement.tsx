@@ -18,7 +18,7 @@ import {
   FiXCircle,
   FiTrendingUp,
   FiDollarSign,
-  FiActivity
+ 
 } from "react-icons/fi";
 import { HiDotsHorizontal } from "react-icons/hi";
 

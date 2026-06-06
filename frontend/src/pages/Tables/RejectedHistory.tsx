@@ -6,13 +6,14 @@ import dayjs from "dayjs";
 import "antd/dist/reset.css";
 import { toast } from "react-toastify";
 import { AgGridReact } from "ag-grid-react";
-import { ColDef } from "ag-grid-community";
+import { ColDef,CellStyle } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+
 import { 
-  FiSearch, 
+
   FiDownload, 
-  FiCalendar, 
+
   FiAlertCircle,
   FiXCircle,
   FiClock,
@@ -91,6 +92,9 @@ export default function RejectedHistory() {
     dayjs().endOf("day"),
   ]);
   const [gridApi, setGridApi] = useState<any>(null);
+
+  console.log(gridApi);
+  
   const [dropdownValue, setDropdownValue] = useState<string>("REJECTED");
 
   const fetchOrders = async (from?: string, to?: string) => {
@@ -306,6 +310,10 @@ export default function RejectedHistory() {
     return <span title={title} className="font-medium">{params.value || 0}</span>;
   };
 
+  const defaultCellStyle: CellStyle = {
+  borderRight: "1px solid #e2e8f0",
+};
+
   const columnDefs: ColDef<any>[] = useMemo(
     () => [
       {
@@ -321,7 +329,7 @@ export default function RejectedHistory() {
             <span className="font-mono text-xs">{params.value || "-"}</span>
           </div>
         ),
-        cellStyle: { borderRight: "1px solid #e2e8f0" },
+        cellStyle: defaultCellStyle,
       },
       {
         headerName: "Symbol",

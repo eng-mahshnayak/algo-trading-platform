@@ -3,7 +3,7 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import "antd/dist/reset.css";
-import { Button } from "antd";
+
 import { toast } from "react-toastify";
 import { getSocket } from "../../socket/Socket";
 import { useNavigate } from "react-router";
@@ -27,7 +27,7 @@ import {
   FiTrendingUp, 
   FiTrendingDown, 
   FiRefreshCw,
-  FiPieChart,
+
   FiXCircle,
   FiActivity
 } from "react-icons/fi";
@@ -1308,19 +1308,7 @@ const handleSubmit = async () => {
     }
   }, [apiUrl, fetchOrders, handleUnauthorized]);
 
-  const fetchOnlineOrdersDetails = useCallback(async () => {
-    try {
-      const res = await axios.get(`${apiUrl}/admin/fetchorderdetails`, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token") || ""}` },
-      });
 
-      if (res.data?.status === true) {
-        fetchOrders();
-      } else if (res.data?.status === false && res.data?.message === "Unauthorized") {
-        handleUnauthorized();
-      }
-    } catch (err: any) { }
-  }, [apiUrl, fetchOrders, handleUnauthorized]);
 
   /** ✅ MAIN SELL */
   const handleSellMain = useCallback(

@@ -16,7 +16,6 @@ import {
   FiPieChart,
   FiXCircle,
   FiUsers,
-  FiActivity
 } from "react-icons/fi";
 
 type Tick = {

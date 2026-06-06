@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AgGridReact } from "ag-grid-react";
-import type { ColDef } from "ag-grid-community";
+import type { ColDef,CellStyle } from "ag-grid-community";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -53,6 +53,14 @@ export default function UserSessionPage() {
 
   /* ================= COLUMNS ================= */
 
+
+  const centerCellStyle: CellStyle = {
+  textAlign: "center",
+  fontWeight: "500",
+};
+
+
+
   const columnDefs = useMemo<ColDef[]>(
     () => [
       {
@@ -66,7 +74,7 @@ export default function UserSessionPage() {
         headerName: "#",
         width: 80,
         valueGetter: (p: any) => (page - 1) * pageSize + (p.node.rowIndex + 1),
-        cellStyle: { textAlign: "center", fontWeight: "500" },
+       cellStyle: centerCellStyle,
       },
       {
         field: "user_name",

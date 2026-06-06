@@ -167,6 +167,9 @@ export default function HoldingOrder() {
   const apiUrl = import.meta.env.VITE_API_URL;
   const { api } = useBrokerApi();
   const [profitAndLossData, setProfitAndLossData] = useState<number>(0);
+
+  console.log(profitAndLossData);
+  
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

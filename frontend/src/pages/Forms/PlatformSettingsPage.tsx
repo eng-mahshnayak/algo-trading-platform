@@ -13,7 +13,6 @@ import {
   FiMail,
   FiPhone,
   FiUpload,
-  FiImage,
   FiX,
   FiTrendingUp,
   FiRefreshCw,
@@ -275,11 +274,14 @@ const PlatformSettingsPage: React.FC = () => {
     fetchData();
   }, []);
 
-  useEffect(() => {
-    if (gridRef.current && gridRef.current.api) {
-      gridRef.current.api.setQuickFilter(search);
-    }
-  }, [search]);
+useEffect(() => {
+  if (gridRef.current?.api) {
+    gridRef.current.api.setGridOption(
+      "quickFilterText",
+      search
+    );
+  }
+}, [search]);
 
   const handleCreate = async () => {
     try {

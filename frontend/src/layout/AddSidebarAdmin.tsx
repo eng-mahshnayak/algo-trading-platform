@@ -6,9 +6,9 @@ import { Star } from "lucide-react";
 
 import {
   LayoutDashboard,
-  ClipboardList,
+
   BarChart2,
-  LineChart,
+
   Shield,
   History,
   Users as UsersIcon,

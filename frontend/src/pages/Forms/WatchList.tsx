@@ -12,8 +12,6 @@ import {
   FiTrendingDown, 
   FiRefreshCw,
   FiActivity,
-  FiUsers,
-  FiDollarSign
 } from "react-icons/fi";
 
 import "ag-grid-community/styles/ag-grid.css";
@@ -61,6 +59,9 @@ export default function WatchList() {
 
   // Strike Levels
   const [strikeLevels, setStrikeLevels] = useState<any>(null);
+
+  console.log(strikeLevels);
+  
   
   // Options Symbols Table Data
   const [optionsSymbols, setOptionsSymbols] = useState<any[]>(optionsSymbolsData || []);

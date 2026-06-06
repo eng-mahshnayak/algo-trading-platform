@@ -12,10 +12,10 @@ import {
   FiFilter, 
   FiShoppingCart, 
   FiTrendingUp, 
-  FiTrendingDown,
+
   FiRefreshCw,
-  FiDollarSign,
-  FiUsers
+
+
 } from "react-icons/fi";
 
 import "ag-grid-community/styles/ag-grid.css";

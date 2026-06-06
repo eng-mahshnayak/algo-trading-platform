@@ -18,13 +18,13 @@ import {
   FiXCircle,
   FiEdit,
   FiPackage,
-  FiHome,
+
   FiDatabase,
   FiShield,
-  FiDollarSign,
+
   FiTag,
   FiServer,
-  FiGlobe,
+
 } from "react-icons/fi";
 import { HiDotsHorizontal } from "react-icons/hi";
 
@@ -123,6 +123,9 @@ export default function UsersTables() {
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [menuPosition, setMenuPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [menuDirection, setMenuDirection] = useState<"bottom" | "top">("bottom");
+
+  console.log(menuDirection);
+  
 
   const [brokers, setBrokers] = useState<any[]>([]);
 
@@ -503,15 +506,6 @@ export default function UsersTables() {
     }
   };
 
-  const handleAssignPackage = (user: User) => {
-    setOpenMenuId(null);
-    setSelectedUserForGroup(user);
-    setGroupName("");
-    setGroupDescription("");
-    setDate("");
-    setPackageFromDate("");
-    setIsGroupModalOpen(true);
-  };
 
   const handleRowUpdateProfile = (user: User) => {
     setOpenMenuId(null);

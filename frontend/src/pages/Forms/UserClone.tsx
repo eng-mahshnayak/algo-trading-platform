@@ -6,7 +6,7 @@ import { AgGridReact } from "ag-grid-react";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { SiRclone } from "react-icons/si";
-import { FaUserEdit } from "react-icons/fa";
+
 import { RiDeleteBin5Fill } from "react-icons/ri";
 import { FaUpload } from "react-icons/fa6";
 import { IoCreateSharp } from "react-icons/io5";
@@ -14,19 +14,17 @@ import { FiSearch, FiRefreshCw, FiTrendingUp } from "react-icons/fi";
 import {
   HiDotsHorizontal,
   HiPlus,
-  HiOutlinePencilAlt,
+
   HiOutlineDocumentAdd,
   HiOutlineUserAdd,
   HiX,
-  HiOutlineCalendar,
+
   HiOutlineCreditCard,
-  HiOutlineBriefcase,
-  HiOutlineChartBar,
+
   HiOutlineUser,
   HiOutlineMail,
   HiOutlineKey,
-  HiOutlineIdentification,
-  HiOutlineCheckCircle,
+
   HiOutlineCloudUpload,
   HiOutlineExclamationCircle,
   HiOutlineTrash,
@@ -187,11 +185,14 @@ const UserClone: React.FC = () => {
     );
   });
 
-  useEffect(() => {
-    if (gridRef.current && gridRef.current.api) {
-      gridRef.current.api.setQuickFilter(searchTerm);
-    }
-  }, [searchTerm]);
+useEffect(() => {
+  if (gridRef.current?.api) {
+    gridRef.current.api.setGridOption(
+      "quickFilterText",
+      searchTerm
+    );
+  }
+}, [searchTerm]);
 
   // Close dropdown when clicking outside
   useEffect(() => {

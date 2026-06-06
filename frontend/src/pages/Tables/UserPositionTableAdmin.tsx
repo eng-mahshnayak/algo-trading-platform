@@ -13,8 +13,7 @@ import {
   FiRefreshCw,
   FiPieChart,
   FiUsers,
-  FiArrowUp,
-  FiArrowDown
+
 } from "react-icons/fi";
 
 type Position = {

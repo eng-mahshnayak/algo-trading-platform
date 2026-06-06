@@ -6,7 +6,7 @@ import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
 import { FiEdit2, FiPlus, FiBriefcase, FiImage, FiTag, FiSearch, FiRefreshCw, FiTrendingUp, FiX } from "react-icons/fi";
 import { HiOutlineBuildingOffice2 } from "react-icons/hi2";
-import { TbListDetails } from "react-icons/tb";
+
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { MdOutlineEditNote } from "react-icons/md";
 

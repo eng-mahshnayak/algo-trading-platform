@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FiShoppingCart, FiRefreshCw } from "react-icons/fi";
+import { FiShoppingCart } from "react-icons/fi";
 
 type Summary = { totalOrder: number; orderData: any[] };
 
@@ -12,6 +12,9 @@ export default function RecentOrders() {
   const navigate = useNavigate();
   const [openOrder, setOpenOrders] = useState<number>(0);
   const [trade, setTrade] = useState<number>(0);
+
+  console.log(trade,openOrder);
+  
   const [loading, setLoading] = useState(true);
   const [summary, setSummary] = useState<Summary>({
     totalOrder: 0,

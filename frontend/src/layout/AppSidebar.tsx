@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom"; 
-import axios from "axios";
+
 
 import {
   BoxCubeIcon,
@@ -11,7 +11,7 @@ import {
 
 import { MdDashboard, MdOutlineSupportAgent } from "react-icons/md";
 import { FaArrowTrendUp, FaClipboardList } from "react-icons/fa6";
-import { FaHandHoldingUsd, FaBook } from "react-icons/fa";
+import { FaHandHoldingUsd } from "react-icons/fa";
 import { RiSettings5Fill } from "react-icons/ri";
 
 import { useSidebar } from "../context/SidebarContext";
@@ -112,7 +112,7 @@ const filterNavItems = (items: NavItem[], role: Role): NavItem[] => {
 };
 
 const AppSidebar: React.FC = () => {
-  const API_URL = import.meta.env.VITE_API_URL;
+
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
   

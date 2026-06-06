@@ -90,6 +90,10 @@ export default function DashboardPretty() {
   const apiUrl = import.meta.env.VITE_API_URL;
   const { api, image, brokerName, role } = useBrokerApi();
 
+
+  console.log(brokerName);
+  
+
   const location = useLocation();
   const navigate = useNavigate();
 

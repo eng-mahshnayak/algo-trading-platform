@@ -2,7 +2,7 @@ import { useEffect, useState, useRef, useMemo } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { AgGridReact } from "ag-grid-react";
-import { Plus, Save } from "lucide-react";
+import {  Save } from "lucide-react";
 
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
@@ -110,7 +110,7 @@ const AssignStrategy: React.FC = () => {
       minWidth: 100,
       sortable: false,
       filter: false,
-      pinned: "right",
+      pinned: "right" as const,
       cellRenderer: (params: any) => (
         <div className="flex items-center gap-2">
           <button
@@ -185,11 +185,14 @@ const AssignStrategy: React.FC = () => {
     setSearchTerm("");
   }, []);
 
-  useEffect(() => {
-    if (gridRef.current && gridRef.current.api) {
-      gridRef.current.api.setQuickFilter(searchTerm);
-    }
-  }, [searchTerm]);
+useEffect(() => {
+  if (gridRef.current?.api) {
+    gridRef.current.api.setGridOption(
+      "quickFilterText",
+      searchTerm
+    );
+  }
+}, [searchTerm]);
 
   const isDuplicateName = (name: string, excludeId?: number): boolean => {
     const normalizedName = name.trim().toLowerCase();
