@@ -1444,8 +1444,8 @@ const openCloneUserForm = async(data: any) => {
     () => [
       {
         headerName: "",
-        width: 65,
-        minWidth: 65,
+        width: 60,
+        minWidth: 60,
         maxWidth: 65,
         cellRenderer: ExpandCellRenderer,
         sortable: false,
@@ -1455,7 +1455,7 @@ const openCloneUserForm = async(data: any) => {
 
       {
         headerName: "Action",
-        width: 105,
+        width: 100,
         sortable: false,
         filter: false,
         cellRenderer: (params: any) => {
@@ -1490,7 +1490,7 @@ const openCloneUserForm = async(data: any) => {
 
       {
         headerName: "Partial",
-        width: 100,
+        width: 95,
         sortable: false,
         filter: false,
         cellRenderer: (params: any) => {
@@ -1519,7 +1519,7 @@ const openCloneUserForm = async(data: any) => {
       },
       {
         headerName: "ReBuy",
-        width: 110,
+        width: 105,
         sortable: false,
         filter: false,
         cellRenderer: (params: any) => {
@@ -1553,12 +1553,12 @@ const openCloneUserForm = async(data: any) => {
           );
         },
       },
-      { headerName: "SYMBOL", field: "tradingsymbol", width: 200 },
-      { headerName: "Price", field: "price", width: 90 },
+      { headerName: "SYMBOL", field: "tradingsymbol", width: 195 },
+      { headerName: "Price", field: "price", width: 85 },
       // ✅ Target (draft only) + API only on ✅
       {
         headerName: "Target",
-        width: 90,
+        width: 80,
         sortable: false,
         filter: false,
         cellRenderer: (params: any) => {
@@ -1599,7 +1599,7 @@ const openCloneUserForm = async(data: any) => {
       // ✅ Stoploss (draft only)
       {
         headerName: "SL",
-        width: 90,
+        width: 80,
         sortable: false,
         filter: false,
         cellRenderer: (params: any) => {
@@ -1835,8 +1835,8 @@ const openCloneUserForm = async(data: any) => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 px-4 md:px-6 lg:px-8 py-6">
-      <div className="max-w-full mx-auto">
+<div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100 p-0">
+  <div className="w-full">
         {/* Header */}
         <div className="mb-6">
           <div className="flex items-center gap-3 mb-2">
@@ -1912,7 +1912,8 @@ const openCloneUserForm = async(data: any) => {
         {/* AG Grid Table */}
         {!loading && !error && (
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-            <div className="ag-theme-alpine" style={{ height: "600px", width: "100%" }}>
+            <div className="ag-theme-alpine" 
+            style={{ height: "600px", width: "100%" }}>
               <AgGridReact<RowItem>
                 onGridReady={onGridReady}
                 rowData={rowData}
