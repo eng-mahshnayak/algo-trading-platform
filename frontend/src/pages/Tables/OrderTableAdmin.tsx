@@ -417,6 +417,9 @@ export default function OrderTableAdmin() {
   };
 
   const [selectedOrder, setSelectedOrder] = useState<any>(null);
+
+  console.log(selectedOrder);
+  
 const [sellPrice, setSellPrice] = useState("");
 const [sellTime, setSellTime] = useState("");
 const [showModal, setShowModal] = useState(false);
