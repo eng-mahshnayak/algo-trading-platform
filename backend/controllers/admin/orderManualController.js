@@ -158,7 +158,7 @@ export const createManualOrderWithInstrument = async (req, res) => {
 
 // const formattedTime = formatDateTime(utcBuyTime);
 
-    const formattedTime = formatDateTime(data.buyTime);
+    const formattedTime = new Date().toISOString()
 
     // 5. order create
     const order = await Order.create({
