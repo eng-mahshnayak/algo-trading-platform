@@ -10,7 +10,7 @@ import { createBroker, deleteBroker, getAllBrokers, getBrokerById, updateBroker 
 import { createCloneUser, deleteCloneUser, getCloneAllUsers, getCloneUserFund, getCloneUserTrade, loginCloneUserDemat, updateCloneUser, uploadOrderExcel } from '../../controllers/admin/cloneUserController.js';
 import { upload } from '../../middleware/upload.js';
 import {   adminGroupSquareOff, adminMultipleHoldingSquareOff, adminMultipleSquareOff, adminPlaceBrokerOrderWithEmployeeId, adminPlaceMultiBrokerOrder, adminPlaceMultiTargetStoplossOrder, adminPlaceReBuyOrder, adminSingleSquareOff, getLoginUser, getTokenStatusSummary } from '../../controllers/admin/adminMultipleBrokerController.js';
-import { createManualOrder, createManualOrderWithBrokerPrice, createManualOrderWithInstrument, createSellManualOrderWithInstrument } from '../../controllers/admin/orderManualController.js';
+import { createManualOrder, createManualOrderWithBrokerPrice, createManualOrderWithInstrument, createSellManualOrderWithInstrument, createSellManualOrderWithInstrumentNew } from '../../controllers/admin/orderManualController.js';
 import {  adminFetchSellOrdersAndUpdateManual, getUsersPnlData } from '../../controllers/admin/adminFetchOrder.js';
 import { getDeshboardOrdersUpdate } from '../../controllers/angelController.js';
 import { clearMergedInstrumentsCache, getMergedInstrumentsCacheTTL } from '../../controllers/instrumentMultipleDematController.js';
@@ -198,9 +198,15 @@ router.post("/manualinstrument/create/order",
  createManualOrderWithInstrument
 );
 
+// router.post("/manualinstrument/createsell/order",
+//   AdminAuthMiddleware, 
+//  createSellManualOrderWithInstrument
+// );
+
+
 router.post("/manualinstrument/createsell/order",
   AdminAuthMiddleware, 
- createSellManualOrderWithInstrument
+ createSellManualOrderWithInstrumentNew
 );
 
 

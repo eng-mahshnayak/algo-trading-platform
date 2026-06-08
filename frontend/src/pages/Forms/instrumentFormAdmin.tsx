@@ -66,7 +66,13 @@ export default function InstrumentFormAdmin() {
 
   // Clone user fields
   const [buyPrice, setBuyPrice] = useState<number>(0);
-  const [buyTime, setBuyTime] = useState<string>("");
+const [buyTime, setBuyTime] = useState<string>(() => {
+  const now = new Date();
+  const offset = now.getTimezoneOffset();
+  const localDate = new Date(now.getTime() - offset * 60000);
+
+  return localDate.toISOString().slice(0, 16);
+});
   const [users, setUsers] = useState<any[]>([]);
   const [manualUserId, setManualUserId] = useState("");
   const [selectedCloneUserId, setSelectedCloneUserId] = useState<string>("");
@@ -193,6 +199,7 @@ export default function InstrumentFormAdmin() {
 
     if (res.data.status === true) {
       setLtp(res.data.data.data.ltp || 0);
+      setBuyPrice(res.data.data.data.ltp || 0)
     } else {
       setLtp(0);
     }
@@ -477,6 +484,12 @@ export default function InstrumentFormAdmin() {
       toast.error("Please Select Clone User!");
       return;
     }
+
+
+    console.log(buyPrice,'===========buyPrice=============');
+    console.log(buyTime,'============buyTime==============');
+    
+    
 
     if (userType === "clone" && (!buyPrice || !buyTime)) {
       toast.error("Please Enter Buy Price and Buy Time");

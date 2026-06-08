@@ -421,18 +421,27 @@ const [sellPrice, setSellPrice] = useState("");
 const [sellTime, setSellTime] = useState("");
 const [showModal, setShowModal] = useState(false);
 
-const openCloneUserForm = (data: any) => {
+const openCloneUserForm = async(data: any) => {
   setSelectedOrder(data);
+
+
+  console.log(data,'======openCloneUserForm========');
+  
   setSellPrice("");
   setSellTime("");
   setShowModal(true);
   console.log(showModal,'showModalshowModalshowModal');
-  
-};
 
-const handleSubmit = async () => {
-  const payload = {
-    ...selectedOrder,          // 👉 pura order data
+
+        const ok = window.confirm(
+        `Do you want to SELL this order !`
+      );
+      if (!ok) return;
+
+
+
+    const payload = {
+    ...data,          // 👉 pura order data
     sellPrice: Number(sellPrice),
     sellTime: sellTime,        // ya ISO me convert kar sakte ho
   };
@@ -454,9 +463,43 @@ const handleSubmit = async () => {
     } else {
       alert("❌ " + res.data?.message);
     }
+  
 };
 
+
+
+// clone user submit sell price and sell time
+
+// const handleSubmit = async () => {
+//   const payload = {
+//     ...selectedOrder,          // 👉 pura order data
+//     sellPrice: Number(sellPrice),
+//     sellTime: sellTime,        // ya ISO me convert kar sakte ho
+//   };
+
+//   console.log(payload, "FINAL PAYLOAD");
+
+//  let res =  await axios.post(
+//         `${apiUrl}/admin/manualinstrument/createsell/order`,
+//         payload,
+//         { headers: authHeader }
+//       );
+
+//       // ✅ Success Check
+//     if (res.data?.status) {
+//       alert("✅ Sell Order Created Successfully");
+
+//       setShowModal(false);
+//       fetchOrders()
+//     } else {
+//       alert("❌ " + res.data?.message);
+//     }
+// };
+
   // handle client selection change
+ 
+ 
+ 
   const handleClientChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (!reBuyData) return;
     
@@ -1409,7 +1452,7 @@ const handleSubmit = async () => {
 
       {
         headerName: "Action",
-        width: 100,
+        width: 105,
         sortable: false,
         filter: false,
         cellRenderer: (params: any) => {
@@ -1444,7 +1487,7 @@ const handleSubmit = async () => {
 
       {
         headerName: "Partial",
-        width: 95,
+        width: 100,
         sortable: false,
         filter: false,
         cellRenderer: (params: any) => {
@@ -1473,7 +1516,7 @@ const handleSubmit = async () => {
       },
       {
         headerName: "ReBuy",
-        width: 105,
+        width: 110,
         sortable: false,
         filter: false,
         cellRenderer: (params: any) => {
@@ -1512,7 +1555,7 @@ const handleSubmit = async () => {
       // ✅ Target (draft only) + API only on ✅
       {
         headerName: "Target",
-        width: 80,
+        width: 90,
         sortable: false,
         filter: false,
         cellRenderer: (params: any) => {
@@ -1553,7 +1596,7 @@ const handleSubmit = async () => {
       // ✅ Stoploss (draft only)
       {
         headerName: "SL",
-        width: 80,
+        width: 90,
         sortable: false,
         filter: false,
         cellRenderer: (params: any) => {
@@ -1594,7 +1637,7 @@ const handleSubmit = async () => {
       // ✅ ✅/❌ icons column for MAIN row also
       {
         headerName: "OCO",
-        width: 70,
+        width: 80,
         sortable: false,
         filter: false,
         cellRenderer: (params: any) => {
@@ -1628,7 +1671,7 @@ const handleSubmit = async () => {
       {
         headerName: "CMP",
         colId: "cmp",
-        width: 95,
+        width: 105,
         sortable: false,
         filter: false,
         valueGetter: (p) => {
@@ -1642,7 +1685,7 @@ const handleSubmit = async () => {
       {
         headerName: "PnL",
         colId: "pnl",
-        width: 110,
+        width: 130,
         sortable: false,
         filter: false,
         valueGetter: (p) => {
@@ -1692,8 +1735,8 @@ const handleSubmit = async () => {
           );
         },
       },
-      { headerName: "Instrument", field: "instrumenttype", width: 140 },
-      { headerName: "TradedQty", field: "fillsize", width: 120 },
+      // { headerName: "Instrument", field: "instrumenttype", width: 140 },
+      // { headerName: "TradedQty", field: "fillsize", width: 120 },
       { headerName: "OrderID", field: "orderid", width: 190 },
       {
         headerName: "Status",
@@ -2072,7 +2115,9 @@ const handleSubmit = async () => {
       )}
 
       {/* Clone User Sell Modal */}
-      {showModal && (
+
+
+      {/* {showModal && (
         <div
           className="fixed inset-0 z-[9999] flex items-center justify-center p-4"
           style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
@@ -2134,7 +2179,7 @@ const handleSubmit = async () => {
             </div>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 }

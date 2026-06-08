@@ -44,6 +44,10 @@ const AppHeader: React.FC = () => {
     localStorage.getItem("BANKNIFTY_PRICE") ? Number(localStorage.getItem("BANKNIFTY_PRICE")) : null
   );
 
+    const [sensex, setSensex] = useState<number | null>(
+    localStorage.getItem("SENSEX_PRICE") ? Number(localStorage.getItem("SENSEX_PRICE")) : null
+  );
+
   // Market Data Connection
   useEffect(() => {
     const socket = getSocket();
@@ -52,6 +56,7 @@ const AppHeader: React.FC = () => {
       lastTickTime.current = Date.now();
       let nifty_50_token = '99926000';
       let bank_nifty_token = '99926009';
+         let sensex_token = '99919000'
       
       if (tick.token === nifty_50_token) {
         setNifty(tick.ltp);
@@ -59,6 +64,10 @@ const AppHeader: React.FC = () => {
       } else if (tick.token === bank_nifty_token) {
         setBankNifty(tick.ltp);
         localStorage.setItem("BANKNIFTY_PRICE", tick.ltp.toString());
+      }
+       else if (tick.token === sensex_token) {
+        setSensex(tick.ltp);
+        localStorage.setItem("SENSEX_PRICE", tick.ltp.toString());
       }
     };
     
@@ -184,6 +193,20 @@ const AppHeader: React.FC = () => {
                 {bankNifty && bankNifty > 0 ? <FiTrendingUp size={16} /> : <FiTrendingDown size={16} />}
               </div>
             </div>
+
+
+            <div className="flex items-center gap-3 px-3 py-1.5 bg-gray-50 rounded-lg">
+              <div className="flex flex-col">
+                <span className="text-xs font-medium text-gray-500">SENSEX </span>
+                <span className="text-sm font-bold text-gray-900">
+                  {sensex ? sensex.toFixed(2) : "--"}
+                </span>
+              </div>
+              <div className={`${sensex && sensex > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                {sensex && sensex > 0 ? <FiTrendingUp size={16} /> : <FiTrendingDown size={16} />}
+              </div>
+            </div>
+
           </div>
 
           {/* Package Info - Desktop */}

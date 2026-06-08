@@ -1,0 +1,4 @@
+{"level":"info","url":"/api/auth/login","method":"POST","status":true,"userId":null,"data":{"msg":"Login User","email":"adminiop@gmail.com"},"message":"API Request Completed","timestamp":"2026-06-08 08:21:39"}
+{"level":"info","url":"/api/auth/login","method":"POST","status":true,"userId":null,"data":{"msg":"Login User","email":"adminiop@gmail.com"},"message":"API Request Completed","timestamp":"2026-06-08 08:22:43"}
+{"level":"info","url":"/api/auth/login","method":"POST","status":true,"userId":null,"data":{"msg":"Login User","email":"adminiop@gmail.com"},"message":"API Request Completed","timestamp":"2026-06-08 08:22:53"}
+{"level":"info","url":"/api/auth/login","method":"POST","status":true,"userId":null,"data":{"msg":"Login User","email":"adminiop@gmail.com"},"message":"API Request Completed","timestamp":"2026-06-08 09:31:47"}

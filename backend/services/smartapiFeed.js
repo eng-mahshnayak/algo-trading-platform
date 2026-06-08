@@ -245,7 +245,10 @@ export  function connectSmartSocket(authToken,feedToken,clientId,) {
 
     let ordersData  = await getOrderFunction(authToken)
 
-    ordersData.push({ exchangeType: 1, tokens: ["99926009","99926000","99919000"] });
+    ordersData.push(
+      { exchangeType: 1, tokens: ["99926009","99926000","99919000"] },
+       { exchangeType: 3, tokens: ["99919000"] }
+    );
           
     const subscribeMessage = {
       correlationID: "abcde12345",

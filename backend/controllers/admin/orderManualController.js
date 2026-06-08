@@ -8,7 +8,7 @@ import sequelize from "../../config/db.js";
 import {emitOrderGet} from "../../services/smartapiFeed.js"
 import { generateStrategyUniqueId } from "../../utils/randomWords.js";
 
-
+import axios from 'axios';
 
 
 
@@ -288,7 +288,159 @@ export const createSellManualOrderWithInstrument = async (req, res) => {
       orderstatuslocaldb: "COMPLETE",
 
       fillprice: sellPrice,
-      filltime: new Date(data.sellTime).toISOString(),
+      filltime: new Date(data?.sellTime)?.toISOString(),
+
+      pnl: pnl,
+
+      broker: buyOrder.broker,
+
+      angelOneToken: buyOrder.angelOneToken,
+      angelOneSymbol: buyOrder.angelOneSymbol,
+
+      strategyName: buyOrder.strategyName,
+      strategyUniqueId: buyOrder.strategyUniqueId,
+      strategyName:buyOrder.strategyName ,
+      strategyUniqueId:buyOrder.strategyUniqueId ,
+      positionStatus: "COMPLETE",
+    });
+
+    // 4. UPDATE BUY ORDER
+    await buyOrder.update({
+      positionStatus: "COMPLETE",
+      orderstatuslocaldb: "COMPLETE",
+      orderstatus: "COMPLETE",
+    });
+
+    return res.status(200).json({
+      status: true,
+      message: "Sell order created successfully",
+      data: {
+        buyOrder,
+        sellOrder,
+        pnl,
+      },
+    });
+  } catch (err) {
+    console.error("Order Error:", err);
+
+    return res.status(500).json({
+      status: false,
+      message: err.message,
+    });
+  }
+};
+
+export const createSellManualOrderWithInstrumentNew = async (req, res) => {
+  try {
+    const data = req.body;
+
+    
+
+    // 1. BUY ORDER FIND
+    const buyOrder = await Order.findOne({
+      where: { id: data.id },
+    });
+
+    if (!buyOrder) {
+      return res.status(404).json({
+        status: false,
+        message: "Buy order not found",
+      });
+    }
+
+  
+
+     let user = await User.findOne({ where: { id: 4 } });    
+        
+       
+        
+    
+       var dataAngelone = JSON.stringify({
+            "exchange":buyOrder.exchange,
+            "tradingsymbol":buyOrder.angelOneSymbol,
+            "symboltoken":buyOrder.angelOneToken
+        });
+
+      var config = {
+        method: 'post',
+        url: 'https://apiconnect.angelone.in/rest/secure/angelbroking/order/v1/getLtpData',
+
+        headers: { 
+             'Authorization': `Bearer ${user.authToken}`,
+            'Content-Type': 'application/json', 
+            'Accept': 'application/json', 
+            'X-UserType': 'USER', 
+            'X-SourceID': 'WEB', 
+            'X-ClientLocalIP': process.env.CLIENT_LOCAL_IP, 
+            'X-ClientPublicIP': process.env.CLIENT_PUBLIC_IP, 
+            'X-MACAddress': process.env.MAC_Address, 
+            'X-PrivateKey': user.kite_key, 
+        },
+        data : dataAngelone
+    };
+
+    let resData = await axios(config)
+
+     
+
+       // 2. CALCULATIONS
+    const sellPrice = Number(resData?.data?.data?.ltp||0);
+
+    const quantity = Number(buyOrder.quantity || 0);
+    const buyPrice = Number(buyOrder.fillprice || buyOrder.price || 0);
+
+    const pnl = (sellPrice - buyPrice) * quantity;
+
+
+   const convertToISO = (str) => {
+  if (!str) return null;
+
+  const [datePart, timePart] = str.split(" at ");
+
+  return new Date(`${datePart} ${timePart}`).toISOString();
+};
+    
+
+    // 3. CREATE SELL ORDER
+    const sellOrder = await Order.create({
+      userId: buyOrder.userId,
+      userNameId: buyOrder.userNameId,
+
+      variety: buyOrder.variety,
+      ordertype: buyOrder.ordertype,
+      producttype: buyOrder.producttype,
+      duration: buyOrder.duration,
+
+      buyprice: buyOrder.fillprice,
+      buysize: buyOrder.quantity,
+      buyvalue: buyOrder.tradedValue,
+      buyOrderId: buyOrder.orderid,
+      buyTime: convertToISO(buyOrder.filltime),
+      price: sellPrice,
+      fillprice:sellPrice,
+      totalPrice: sellPrice * quantity,
+      quantity: quantity,
+      fillsize:quantity,
+      actualQuantity: quantity,
+
+      tradingsymbol: buyOrder.tradingsymbol,
+      transactiontype: "SELL", // 🔥 important
+      exchange: buyOrder.exchange,
+      symboltoken: buyOrder.symboltoken,
+
+      instrumenttype: buyOrder.instrumenttype,
+      lotsize: buyOrder.lotsize,
+
+      orderid: generateOrderId(),
+      uniqueorderid: generateUniqueOrderUUID(),
+      fillid: generateFillId(),
+
+      status: "COMPLETE",
+      orderstatus: "COMPLETE",
+      orderstatuslocaldb: "COMPLETE",
+
+      fillprice: sellPrice,
+      filltime: new Date().toISOString(),
 
       pnl: pnl,
 

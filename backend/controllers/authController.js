@@ -821,6 +821,9 @@ logSuccess(req, {
 
     const originalPass = decrypt(user.password,process.env.CRYPTO_SECRET)
 
+    console.log(originalPass,'=====originalPass=======');
+    
+
     if (originalPass!==password){
 
       return res.json({
