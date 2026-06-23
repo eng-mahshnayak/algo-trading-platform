@@ -319,7 +319,7 @@ export default function TradeAdmin() {
       { headerName: "Quantity", field: "quantity" as any, width: 110 },
       { headerName: "PNL", field: "pnl", width: 120, cellRenderer: (params: any) => pnlPill(params.value) },
       { headerName: "Order ID", field: "orderid", width: 190 },
-      { headerName: "Strategy ID", field: "strategyUniqueId", width: 200, minWidth: 180 },
+      { headerName: "Group ID", field: "strategyUniqueId", width: 200, minWidth: 180 },
       { headerName: "Instrument", field: "instrumenttype", width: 150, minWidth: 140 },
       { headerName: "Order Type", field: "ordertype", width: 140 },
       { headerName: "Product Type", field: "producttype", width: 140 },

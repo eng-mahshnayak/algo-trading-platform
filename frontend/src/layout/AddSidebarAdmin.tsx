@@ -2,14 +2,14 @@ import React, { useCallback, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDownIcon, HorizontaLDots } from "../icons";
 import { Settings } from "lucide-react";
-import { Star } from "lucide-react";
+
 
 import {
   LayoutDashboard,
 
   BarChart2,
 
-  Shield,
+
   History,
   Users as UsersIcon,
   TrendingUp,
@@ -42,12 +42,6 @@ const navItems: NavItem[] = [
     icon: <LayoutDashboard size={20} />,
     name: "Overview",
     path: "/admin/deshboard",
-    roles: ["admin", "user"],
-  },
-  {
-    icon: <Star size={20} />,
-    name: "Watchlist",
-    path: "/admin/watch",
     roles: ["admin", "user"],
   },
   {
@@ -85,7 +79,7 @@ const navItems: NavItem[] = [
         roles: ["admin", "user"],
       },
       {
-        name: "Clone User",
+        name: "Dummy User",
         path: "/admin/user-clone",
         roles: ["admin"],
       },
@@ -94,11 +88,7 @@ const navItems: NavItem[] = [
         path: "/admin/user-session",
         roles: ["admin"],
       },
-      {
-        name: "User Performance",
-        path: "/admin/user-report",
-        roles: ["admin"],
-      },
+     
       {
         name: "PnL Analysis",
         path: "/admin/check/userpnl",
@@ -117,20 +107,11 @@ const navItems: NavItem[] = [
         roles: ["admin", "user"],
       },
       {
-        name: "Strategy Assignment",
+        name: "Group Assignment",
         path: "/admin/strategy",
         roles: ["admin"],
       },
-      {
-        name: "Platform Settings",
-        path: "/admin/platform",
-        roles: ["admin"],
-      },
-      {
-        name: "GitHub Integration",
-        path: "/admin/github",
-        roles: ["admin"],
-      },
+     
     ],
   },
   {
@@ -145,12 +126,7 @@ const navItems: NavItem[] = [
     path: "/admin/rejected/history",
     roles: ["admin", "user"],
   },
-  {
-    icon: <Shield size={20} />,
-    name: "Risk Controls",
-    path: "/admin/riskconfig",
-    roles: ["admin"],
-  }
+ 
 ];
 
 const othersItems: NavItem[] = [];

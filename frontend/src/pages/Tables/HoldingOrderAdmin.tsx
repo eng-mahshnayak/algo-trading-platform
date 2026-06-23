@@ -465,7 +465,7 @@ export default function HoldingOrderAdmin() {
         cellStyle: { borderRight: "1px solid #e2e8f0" },
       },
       {
-        headerName: "Strategy",
+        headerName: "Group",
         field: "strategyName",
         cellRenderer: (params: any) => {
           return (
@@ -735,7 +735,7 @@ export default function HoldingOrderAdmin() {
                 <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
                 <input
                   type="text"
-                  placeholder="Search by symbol, order ID, strategy, user ID..."
+                  placeholder="Search by Symbol, Order ID, Group, User ID..."
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] transition-all"

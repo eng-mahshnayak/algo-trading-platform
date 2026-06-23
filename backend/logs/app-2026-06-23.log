@@ -1,0 +1,8 @@
+{"level":"info","url":"/api/auth/login","method":"POST","status":true,"userId":null,"data":{"msg":"Login User","email":"adminiop@gmail.com"},"message":"API Request Completed","timestamp":"2026-06-23 06:41:13"}
+{"level":"error","url":"/api/admin/getall/holdingdata","method":"GET","status":false,"userId":null,"data":{"msg":"Holding sync failed (user)","userId":83},"message":"Connection terminated unexpectedly","timestamp":"2026-06-23 08:36:08"}
+{"level":"info","url":"/api/auth/login","method":"POST","status":true,"userId":null,"data":{"msg":"Login User","email":"adminiop@gmail.com"},"message":"API Request Completed","timestamp":"2026-06-23 08:36:46"}
+{"level":"error","url":"/api/admin/tokenstatussummary","method":"GET","status":false,"userId":null,"data":{"msg":"getTokenStatusSummary failed"},"message":"Connection terminated unexpectedly","timestamp":"2026-06-23 08:36:54"}
+{"level":"info","url":"/api/auth/login","method":"POST","status":true,"userId":null,"data":{"msg":"Login User","email":"ab123xzc890@gmail.com"},"message":"API Request Completed","timestamp":"2026-06-23 08:52:58"}
+{"level":"info","url":"/api/auth/login","method":"POST","status":true,"userId":null,"data":{"msg":"Login User","email":"m@gmail.com"},"message":"API Request Completed","timestamp":"2026-06-23 09:45:31"}
+{"level":"info","url":"/api/auth/login","method":"POST","status":true,"userId":null,"data":{"msg":"Login User","email":"adminiop@gmail.com"},"message":"API Request Completed","timestamp":"2026-06-23 09:47:00"}
+{"level":"info","url":"/api/auth/login","method":"POST","status":true,"userId":null,"data":{"msg":"Login User","email":"sagar@gmail.com"},"message":"API Request Completed","timestamp":"2026-06-23 09:55:39"}

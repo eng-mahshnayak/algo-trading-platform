@@ -69,20 +69,7 @@ const BrokerPage: React.FC = () => {
         </div>
       ),
     },
-    {
-      headerName: "Tag",
-      field: "tag",
-      flex: 1,
-      minWidth: 120,
-      sortable: true,
-      filter: true,
-      cellRenderer: (params: any) => (
-        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-purple-50 text-purple-700 rounded-lg text-xs font-medium">
-          <FiTag size={12} />
-          {params.value || "—"}
-        </span>
-      ),
-    },
+    
     {
       headerName: "Logo",
       field: "brokerLink",
@@ -523,21 +510,7 @@ const BrokerPage: React.FC = () => {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Broker Tag
-                </label>
-                <div className="relative">
-                  <FiTag className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-                  <input
-                    type="text"
-                    value={editTag}
-                    onChange={(e) => setEditTag(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] transition-all outline-none"
-                    placeholder="e.g., premium, standard"
-                  />
-                </div>
-              </div>
+             
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -615,20 +588,7 @@ const BrokerPage: React.FC = () => {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Broker Tag
-                </label>
-                <div className="relative">
-                  <FiTag className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
-                  <input
-                    type="text"
-                    value={editTag}
-                    onChange={(e) => setEditTag(e.target.value)}
-                    className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
-                  />
-                </div>
-              </div>
+            
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">

@@ -1,169 +1,229 @@
 import { FC, useState } from "react";
-import Input from "../form/input/InputField";
-import Button from "../ui/button/Button";
-import { EyeCloseIcon, EyeIcon } from "../../icons";
-import Label from "../form/Label";
-import axios from "axios";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { 
+  Lock, 
+  Eye, 
+  EyeOff, 
+  Shield,
+  RefreshCw,
+  CheckCircle
+} from "lucide-react";
 
 const ChangePassword: FC = () => {
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const apiUrl = import.meta.env.VITE_API_URL;
 
-    const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-    const [showNewPassword, setShowNewPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [currentPassword, setCurrentPassword] = useState("");
-    const [newPassword, setNewPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
-    const apiUrl = import.meta.env.VITE_API_URL;
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
 
-    const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-
-        try {
-
-           
-            const res = await axios.put(`${apiUrl}/auth/update-password`, {
-                currentPassword,
-                newPassword,
-                confirmPassword
-            },
-             {
-            headers: {
+    try {
+      const res = await axios.put(
+        `${apiUrl}/auth/update-password`,
+        {
+          currentPassword,
+          newPassword,
+          confirmPassword,
+        },
+        {
+          headers: {
             Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-            "Content-Type": "application/json"
-            }
-  }
-        )
-
-            toast.success(res.data.message);
-            setCurrentPassword("");
-            setNewPassword("");
-            setConfirmPassword("");
-        } catch (err: any) {
-            toast.error(err.response?.data?.message || "Something went wrong");
+            "Content-Type": "application/json",
+          },
         }
+      );
+
+      toast.success(res.data.message);
+      setIsSuccess(true);
+      setCurrentPassword("");
+      setNewPassword("");
+      setConfirmPassword("");
+      
+      setTimeout(() => setIsSuccess(false), 3000);
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
+  };
 
-    return (
-        <section className="bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-            <div className="w-full p-6 bg-white rounded-lg shadow dark:border  dark:bg-gray-800 dark:border-gray-700">
-                <h2 className="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center">
-                    Change Password
-                </h2>
-                <form className="mt-4 space-y-4 lg:mt-5 md:space-y-5" action="#" onSubmit={handleSubmit}>
-                    <div>
-                        <Label
-                            htmlFor="current-password"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                            Current Password <span className="text-error-500">*</span>
-                        </Label>
-                        <div className="relative">
-                            <Input
-                                type={showCurrentPassword ? "text" : "password"}
-                                value={currentPassword}
-                                onChange={(e) => setCurrentPassword(e.target.value)}
-                                name="current-password"
-                                id="current-password"
-                                placeholder="••••••••"
-                                required
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-                focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 
-                dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
-                dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            />
-                            <span
-                                onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-                                className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
-                            >
-                                {showCurrentPassword ? (
-                                    <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                                ) : (
-                                    <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                                )}
-                            </span>
-                        </div>
-                    </div>
-                    <div>
-                        <Label
-                            htmlFor="password"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                            New Password <span className="text-error-500">*</span>
-                        </Label>
-                        <div className="relative">
-                            <Input
-                                type={showNewPassword ? "text" : "password"}
-                                value={newPassword}
-                                onChange={(e) => setNewPassword(e.target.value)}
-                                name="password"
-                                id="password"
-                                placeholder="••••••••"
-                                required
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-                focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 
-                dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
-                dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            />
-                            <span
-                                onClick={() => setShowNewPassword(!showNewPassword)}
-                                className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
-                            >
-                                {showNewPassword ? (
-                                    <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                                ) : (
-                                    <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                                )}
-                            </span>
-                        </div>
-                    </div>
+  return (
+   <div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-start justify-center pt-8 p-4 relative overflow-hidden">
+      {/* Subtle Background Elements */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FB3800]/5 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
+      </div>
 
-                    {/* Confirm Password */}
-                    <div>
-                        <Label
-                            htmlFor="confirm-password"
-                            className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-                        >
-                            Confirm password <span className="text-error-500">*</span>
-                        </Label>
-                        <div className="relative">
-                            <Input
-                                type={showConfirmPassword ? "text" : "password"}
-                                value={confirmPassword}
-                                onChange={(e) => setConfirmPassword(e.target.value)}
-                                name="confirm-password"
-                                id="confirm-password"
-                                placeholder="••••••••"
-                                required
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-                focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 
-                dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
-                dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                            />
-                            <span
-                                onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                                className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
-                            >
-                                {showConfirmPassword ? (
-                                    <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                                ) : (
-                                    <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                                )}
-                            </span>
-                        </div>
-                    </div>
-                    <Button
-                        type="submit"
-                        className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 
-            focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 
-            text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-                    >
-                        Reset password
-                    </Button>
-                </form>
+      {/* Simple Form Card - No scroll */}
+<div className="relative w-full max-w-md -mt-12">
+        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 p-8 lg:p-10">
+          <div className="w-full">
+            {/* Header */}
+            <div className="text-center mb-6">
+              <div className="flex justify-center mb-3">
+                <div className="bg-[#FB3800]/10 p-3 rounded-2xl">
+                  <Lock className="h-8 w-8 text-[#FB3800]" />
+                </div>
+              </div>
+              <h2 className="text-2xl font-bold text-gray-900">Change Password</h2>
+              <p className="text-sm text-gray-500 mt-1">
+                Update your account password
+              </p>
+              {isSuccess && (
+                <div className="mt-3 inline-flex items-center gap-2 bg-green-50 px-3 py-1.5 rounded-full border border-green-200">
+                  <CheckCircle className="h-4 w-4 text-green-600" />
+                  <span className="text-xs text-green-700 font-medium">Password Updated!</span>
+                </div>
+              )}
             </div>
-        </section>
-    );
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {/* Current Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  <Lock className="h-4 w-4 inline mr-2 text-[#FB3800]" />
+                  Current Password
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showCurrentPassword ? "text" : "password"}
+                    value={currentPassword}
+                    onChange={(e) => setCurrentPassword(e.target.value)}
+                    placeholder="Enter your current password"
+                    required
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl 
+                             text-gray-900 placeholder-gray-400
+                             focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] 
+                             transition-all duration-200 outline-none pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowCurrentPassword(!showCurrentPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                  >
+                    {showCurrentPassword ? (
+                      <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+                    ) : (
+                      <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* New Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  <Lock className="h-4 w-4 inline mr-2 text-[#FB3800]" />
+                  New Password
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showNewPassword ? "text" : "password"}
+                    value={newPassword}
+                    onChange={(e) => setNewPassword(e.target.value)}
+                    placeholder="Enter new password"
+                    required
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl 
+                             text-gray-900 placeholder-gray-400
+                             focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] 
+                             transition-all duration-200 outline-none pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowNewPassword(!showNewPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                  >
+                    {showNewPassword ? (
+                      <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+                    ) : (
+                      <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Confirm Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1.5">
+                  <Lock className="h-4 w-4 inline mr-2 text-[#FB3800]" />
+                  Confirm Password
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showConfirmPassword ? "text" : "password"}
+                    value={confirmPassword}
+                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    placeholder="Confirm your new password"
+                    required
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl 
+                             text-gray-900 placeholder-gray-400
+                             focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] 
+                             transition-all duration-200 outline-none pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                  >
+                    {showConfirmPassword ? (
+                      <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+                    ) : (
+                      <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-[#FB3800] to-orange-500 
+                         text-white py-3 rounded-xl font-semibold
+                         hover:shadow-lg hover:shadow-[#FB3800]/20 hover:scale-[1.02] 
+                         transform transition-all duration-200
+                         disabled:opacity-60 disabled:cursor-not-allowed
+                         disabled:hover:scale-100 mt-2"
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <RefreshCw className="animate-spin h-5 w-5" />
+                    Updating...
+                  </div>
+                ) : (
+                  <>
+                    <Lock className="h-5 w-5 inline mr-2" />
+                    Update Password
+                  </>
+                )}
+              </button>
+
+              {/* Security Note */}
+              <div className="mt-3 text-center">
+                <p className="text-xs text-gray-400 flex items-center justify-center gap-2">
+                  <Shield className="h-3 w-3" />
+                  Your password is encrypted and securely stored
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ChangePassword;

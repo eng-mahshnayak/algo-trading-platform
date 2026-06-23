@@ -18,6 +18,7 @@ export default function UserDropdown() {
     const [broker, setBroker] = useState("");
 
    
+ console.log(broker);
  
 
   
@@ -209,81 +210,7 @@ export default function UserDropdown() {
               Edit profile
             </DropdownItem>
           </li>
-           {broker === "angelone" &&
-          <li>
-            
-            <DropdownItem
-              onItemClick={closeDropdown}
-              tag="a"
-              to="/angelonecredential"
-              className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-            >
-              AngelOne Credential
-            </DropdownItem>
-          </li>
-             }
-
-        {broker === "kite" &&
-          <li>
-            <DropdownItem
-              onItemClick={closeDropdown}
-              tag="a"
-              to="/kitecredential"
-              className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-            >
-              Kite Credential
-            </DropdownItem>
-          </li>
-          }
-          {broker === "finvasia" &&
-             <li>
-            <DropdownItem
-              onItemClick={closeDropdown}
-              tag="a"
-              to="/finavasiacredential"
-              className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-            >
-              Finavasia Credential
-            </DropdownItem>
-          </li>
-        }
-          {broker === "kotak neo" &&
-             <li>
-            <DropdownItem
-              onItemClick={closeDropdown}
-              tag="a"
-              to="/kotakcredential"
-              className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-            >
-              Kotak Credential
-            </DropdownItem>
-          </li>
-        }
-         {broker === "fyers" &&
-             <li>
-            <DropdownItem
-              onItemClick={closeDropdown}
-              tag="a"
-              to="/fyerscredential"
-              className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-            >
-              Fyers Credential
-            </DropdownItem>
-          </li>
-        }
-
-        {broker === "groww" &&
-             <li>
-            <DropdownItem
-              onItemClick={closeDropdown}
-              tag="a"
-              to="/growwcredential"
-              className="flex items-center gap-3 px-3 py-2 font-medium text-gray-700 rounded-lg group text-theme-sm hover:bg-gray-100 hover:text-gray-700 dark:text-gray-400 dark:hover:bg-white/5 dark:hover:text-gray-300"
-            >
-              Groww Credential
-            </DropdownItem>
-          </li>
-        }
+          
 
          
           <li>

@@ -1,3 +1,4 @@
+
 import { useEffect, useMemo, useRef, useState, useCallback } from "react";
 import { createPortal } from "react-dom";
 import axios from "axios";
@@ -6,9 +7,10 @@ import { AgGridReact } from "ag-grid-react";
 import type { ColDef } from "ag-grid-community";
 import "ag-grid-community/styles/ag-grid.css";
 import "ag-grid-community/styles/ag-theme-alpine.css";
+import { useNavigate } from "react-router-dom";
+
 import {
   FiSearch,
-  FiRefreshCw,
   FiUser,
   FiCalendar,
   FiTrendingUp,
@@ -18,13 +20,12 @@ import {
   FiXCircle,
   FiEdit,
   FiPackage,
-
   FiDatabase,
   FiShield,
-
-  FiTag,
   FiServer,
-
+  FiPlus,
+  FiEye,
+  FiEyeOff,
 } from "react-icons/fi";
 import { HiDotsHorizontal } from "react-icons/hi";
 
@@ -120,13 +121,14 @@ export default function UsersTables() {
   const [strategyList, setStrategyList] = useState<any[]>([]);
   const [selectedStrategyId, setSelectedStrategyId] = useState("");
 
+    const navigate = useNavigate();
+
   const [openMenuId, setOpenMenuId] = useState<number | null>(null);
   const [menuPosition, setMenuPosition] = useState<{ x: number; y: number }>({ x: 0, y: 0 });
   const [menuDirection, setMenuDirection] = useState<"bottom" | "top">("bottom");
 
   console.log(menuDirection);
   
-
   const [brokers, setBrokers] = useState<any[]>([]);
 
   const buttonRef = useRef<HTMLButtonElement | null>(null);
@@ -134,6 +136,7 @@ export default function UsersTables() {
 
   const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
   const [isPackageAssignModalOpen, setIsPackageAssignModalOpen] = useState(false);
+  const [isCreateUserModalOpen, setIsCreateUserModalOpen] = useState(false);
 
   const [selectedUserForGroup, setSelectedUserForGroup] = useState<User | null>(null);
   const [groupName, setGroupName] = useState("");
@@ -148,6 +151,20 @@ export default function UsersTables() {
 
   const [sourceList, setSourceList] = useState<string[]>([]);
   const [employeeList, setEmployeeList] = useState<string[]>([]);
+
+  console.log(sourceList,employeeList);
+  
+
+  // Create User Form States
+  const [showPassword, setShowPassword] = useState(false);
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [broker, setBroker] = useState("");
+  const [email, setEmail] = useState("");
+  const [mob, setMob] = useState("");
+  const [password, setPassword] = useState("");
+  const [createLoading, setCreateLoading] = useState(false);
+  const [isChecked, setIsChecked] = useState(false);
 
   const fetchUsers = async () => {
     try {
@@ -253,11 +270,12 @@ export default function UsersTables() {
         if (isGroupModalOpen && !creating) closeGroupModal();
         else if (isPackageAssignModalOpen) closePackageModal();
         else if (isEditModalOpen) handleCloseEditModal();
+        else if (isCreateUserModalOpen) setIsCreateUserModalOpen(false);
       }
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [isGroupModalOpen, isPackageAssignModalOpen, isEditModalOpen, creating]);
+  }, [isGroupModalOpen, isPackageAssignModalOpen, isEditModalOpen, isCreateUserModalOpen, creating]);
 
   const filtered = useMemo(() => {
     if (!search.trim()) return users;
@@ -280,6 +298,52 @@ export default function UsersTables() {
   }, [users, search]);
 
   const fullName = (u: User) => [u.firstName, u.lastName].filter(Boolean).join(" ") || "-";
+
+  // Create User Handler
+  const handleCreateUserSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!isChecked) {
+      toast.error("Please accept the Terms and Conditions before signing up.");
+      return;
+    }
+
+    setCreateLoading(true);
+
+    try {
+      const response = await axios.post(`${API_URL}/auth/register`, {
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        email: email.trim(),
+        mob: mob,
+        password: password,
+        isChecked: isChecked,
+        broker: broker,
+      });
+
+      if (response.data.status === true) {
+        toast.success("User created successfully!");
+        setIsCreateUserModalOpen(false);
+        setFirstName("");
+        setLastName("");
+        setEmail("");
+        setMob("");
+        setPassword("");
+        setBroker("");
+        setIsChecked(false);
+        fetchUsers();
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error: any) {
+      toast.error(
+        error.response?.data?.message ||
+          "Something went wrong. Please try again."
+      );
+    } finally {
+      setCreateLoading(false);
+    }
+  };
 
   const handleGenerateToken = async (user: User) => {
     try {
@@ -327,11 +391,9 @@ export default function UsersTables() {
     }
   };
 
-   const startInstance = async (user: User) => {
+  const startInstance = async (user: User) => {
     try {
-
-    // Show loading toast
-    const loadingToastId = toast.loading("Starting instance... Please wait");
+      const loadingToastId = toast.loading("Starting instance... Please wait");
 
       const response = await axios.get(`${API_URL}/awsadmin/aws/start-instance/${user.id}`, {
         headers: {
@@ -340,15 +402,12 @@ export default function UsersTables() {
         },
       });
 
-      // Dismiss loading toast
       toast.dismiss(loadingToastId);
-      
-      console.log(response.data,'=================response.data===========');
 
       const data = response.data;
 
       if (data.success === true) {
-         toast.success(`Instance ${data.data.state} !`);
+        toast.success(`Instance ${data.data.state} !`);
       } else {
         toast.error(data?.data?.error || "Failed to fetch tokens");
       }
@@ -357,7 +416,7 @@ export default function UsersTables() {
     }
   };
 
-    const handleRowLogin = async (user: User) => {
+  const handleRowLogin = async (user: User) => {
     try {
       const { data } = await axios.get(
         `${API_URL}/admin/login/totp/angelone`,
@@ -388,11 +447,9 @@ export default function UsersTables() {
     }
   };
 
-    const stopInstance = async (user: User) => {
+  const stopInstance = async (user: User) => {
     try {
-
-                // Show loading toast
-    const loadingToastId = toast.loading("Stoping instance... Please wait");
+      const loadingToastId = toast.loading("Stoping instance... Please wait");
 
       const response = await axios.get(`${API_URL}/awsadmin/aws/stop-instance/${user.id}`, {
         headers: {
@@ -401,17 +458,12 @@ export default function UsersTables() {
         },
       });
 
-       // Dismiss loading toast
       toast.dismiss(loadingToastId);
-
-
 
       const data = response.data;
 
-      console.log(data,'=================response.data===========');
-
       if (data.success === true) {
-         toast.success(`Instance ${data.data.state} !`);
+        toast.success(`Instance ${data.data.state} !`);
       } else {
         toast.error(data?.data?.error || "Failed to fetch tokens");
       }
@@ -420,11 +472,9 @@ export default function UsersTables() {
     }
   };
 
-  const deleteInstance= async (user: User) => {
+  const deleteInstance = async (user: User) => {
     try {
-
-                // Show loading toast
-    const loadingToastId = toast.loading("Deleting instance... Please wait");
+      const loadingToastId = toast.loading("Deleting instance... Please wait");
 
       const response = await axios.delete(`${API_URL}/awsadmin/aws/delete-instance/${user.id}`, {
         headers: {
@@ -433,16 +483,12 @@ export default function UsersTables() {
         },
       });
 
-      
-  // Dismiss loading toast
       toast.dismiss(loadingToastId);
 
       const data = response.data;
 
-        console.log(data,'=================response.data===========');
-
       if (data.success === true) {
-         toast.success(`Instance Deleted `);
+        toast.success(`Instance Deleted `);
       } else {
         toast.error(data?.data?.error || "Failed to fetch tokens");
       }
@@ -502,10 +548,9 @@ export default function UsersTables() {
         toast.error(createRes?.data?.message);
       }
     } catch (err: any) {
-      toast.error(err?.message || "Failed to assign strategy");
+      toast.error(err?.message || "Failed to assign Group");
     }
   };
-
 
   const handleRowUpdateProfile = (user: User) => {
     setOpenMenuId(null);
@@ -661,6 +706,45 @@ export default function UsersTables() {
     }
   };
 
+
+  const brokersetup = async (user: User)=> {
+
+       console.log(user.brokerName,'=====================user==========');
+
+       if(user.brokerName==='angelone') {
+
+        navigate("/angelonecredential");
+
+       } else if(user.brokerName==='kite') {
+
+         navigate("/kitecredential");
+        
+       } else if(user.brokerName==='finvasia') {
+
+         navigate("/finavasiacredential");
+        
+       } else if(user.brokerName==='kotak neo') {
+
+         navigate("/kotakcredential");
+        
+       }else if(user.brokerName==='fyers') {
+        
+         navigate("/fyerscredential");
+
+       }else if(user.brokerName==='groww') {
+
+         navigate("/growwcredential");
+        
+       }else if(user.brokerName==='upstox') {
+
+        //  navigate("/about");
+        
+       }
+
+      
+       
+  }
+
   useEffect(() => {
     if (!buttonRef.current || !openMenuId) return;
 
@@ -691,38 +775,33 @@ export default function UsersTables() {
       </button>
       <button onClick={() => { handleRowCreateGroup(user); setOpenMenuId(null); }}
         className="flex items-center gap-2 w-full text-left px-4 py-3 hover:bg-purple-50 transition-colors text-gray-700 hover:text-purple-600">
-        <FiTrendingUp className="h-4 w-4" /><span>Assign Strategy</span>
+        <FiTrendingUp className="h-4 w-4" /><span>Assign Group</span>
       </button>
       <button onClick={() => { handleRowUpdateProfile(user); setOpenMenuId(null); }}
         className="flex items-center gap-2 w-full text-left px-4 py-3 hover:bg-amber-50 transition-colors text-gray-700 hover:text-amber-600">
         <FiEdit className="h-4 w-4" /><span>Update Profile</span>
+      </button>
+        <button onClick={() => { brokersetup(user); setOpenMenuId(null); }}
+        className="flex items-center gap-2 w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors text-gray-700 hover:text-blue-600">
+        <FiKey className="h-4 w-4" /><span>Broker Setup</span>
       </button>
       <div className="border-t border-gray-100 my-1"></div>
       <button onClick={() => { handleRowLogin(user); setOpenMenuId(null); }}
         className="flex items-center gap-2 w-full text-left px-4 py-3 hover:bg-indigo-50 transition-colors text-gray-700 hover:text-indigo-600">
         <FiPackage className="h-4 w-4" /><span>Login User</span>
       </button>
-      {/* <button onClick={() => { window.open(`${import.meta.env.VITE_API_URL_FORNTEND}/admincheckuser/deshboard?userId=${user.id}`, "_blank"); setOpenMenuId(null); }}
-        className="flex items-center gap-2 w-full text-left px-4 py-3 hover:bg-gray-50 transition-colors text-gray-700 hover:text-gray-900">
-        <FiHome className="h-4 w-4" /><span>View Dashboard</span>
-      </button> */}
-
       <button onClick={() => { startInstance(user); setOpenMenuId(null); }}
         className="flex items-center gap-2 w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors text-gray-700 hover:text-blue-600">
         <FiKey className="h-4 w-4" /><span>Instance Start</span>
       </button>
-
-       <button onClick={() => {   stopInstance(user); setOpenMenuId(null); }}
+      <button onClick={() => { stopInstance(user); setOpenMenuId(null); }}
         className="flex items-center gap-2 w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors text-gray-700 hover:text-blue-600">
         <FiKey className="h-4 w-4" /><span>Instance Stop</span>
       </button>
-
-        <button onClick={() => { deleteInstance(user); setOpenMenuId(null); }}
+      <button onClick={() => { deleteInstance(user); setOpenMenuId(null); }}
         className="flex items-center gap-2 w-full text-left px-4 py-3 hover:bg-blue-50 transition-colors text-gray-700 hover:text-blue-600">
         <FiKey className="h-4 w-4" /><span>Instance Delete</span>
       </button>
-
-
     </div>
   );
 
@@ -733,14 +812,13 @@ export default function UsersTables() {
     { field: 'id', headerName: 'ID', width: 80, cellRenderer: (params: any) => (<span className="bg-blue-50 text-blue-700 px-2 py-1 rounded text-xs">#{params.value}</span>) },
     { field: 'firstName', headerName: 'User', width: 180, cellRenderer: (params: any) => (<div className="font-medium text-gray-900">{fullName(params.data)}</div>) },
     { field: 'email', headerName: 'Email', width: 220, cellRenderer: (params: any) => (<div className="text-sm text-gray-700">{params.data.email}</div>) },
-        { field: 'password', headerName: 'Password', width: 220, cellRenderer: (params: any) => (<div className="text-sm text-gray-700">{params.data.password}</div>) },
-
+    { field: 'password', headerName: 'Password', width: 220, cellRenderer: (params: any) => (<div className="text-sm text-gray-700">{params.data.password}</div>) },
     { field: 'username', headerName: 'Username', width: 140, cellRenderer: (params: any) => (<span className="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs">@{params.value}</span>) },
     { field: 'brokerName', headerName: 'Broker', width: 130, cellRenderer: (params: any) => (<span>{params.value || '-'}</span>) },
     { field: 'instanceId', headerName: 'Instance ID', width: 160, cellRenderer: (params: any) => params.value ? (<span className="bg-purple-50 text-purple-700 px-3 py-1.5 rounded-full text-xs font-medium">{params.value}</span>) : (<span className="text-gray-400">-</span>) },
     { field: 'publicIp', headerName: 'Public IP', width: 140, cellRenderer: (params: any) => params.value ? (<span className="bg-indigo-50 text-indigo-700 px-3 py-1.5 rounded-full text-xs font-medium">{params.value}</span>) : (<span className="text-gray-400">-</span>) },
     { field: 'status', headerName: 'Status', width: 120, cellRenderer: (params: any) => params.value ? (<span className={`px-2 py-1 rounded-full text-xs font-medium ${params.value === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{params.value}</span>) : (<span className="text-gray-400">-</span>) },
-    { field: 'strategyName', headerName: 'Strategy', width: 150, cellRenderer: (params: any) => params.value ? (<span className="bg-teal-50 text-teal-700 px-3 py-1.5 rounded-full text-xs font-medium">{params.value}</span>) : (<span className="text-gray-400">-</span>) },
+    { field: 'strategyName', headerName: 'Group', width: 150, cellRenderer: (params: any) => params.value ? (<span className="bg-teal-50 text-teal-700 px-3 py-1.5 rounded-full text-xs font-medium">{params.value}</span>) : (<span className="text-gray-400">-</span>) },
     { field: 'angelLoginUser', headerName: 'Login', width: 100, cellRenderer: (params: any) => (<span className={`px-3 py-1 rounded-full text-xs font-medium ${params.value ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'}`}>{params.value ? 'Yes' : 'No'}</span>) },
     { field: undefined, headerName: 'Actions', width: 80, cellRenderer: (params: any) => (
         <button ref={buttonRef as any} onClick={(e: React.MouseEvent) => { e.stopPropagation(); toggleMenu(params.data.id, e.currentTarget as HTMLButtonElement); }}
@@ -772,7 +850,7 @@ export default function UsersTables() {
             </div>
             <h1 className="text-2xl md:text-3xl font-bold text-gray-800">User Management</h1>
           </div>
-          <p className="text-gray-500 text-sm ml-12">Manage all users, their packages, and strategies</p>
+          <p className="text-gray-500 text-sm ml-12">Manage all users, their packages, and groups</p>
         </div>
 
         {/* Stats Cards */}
@@ -797,13 +875,13 @@ export default function UsersTables() {
           </div>
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
             <div className="flex items-center justify-between">
-              <div><p className="text-xs text-gray-400 uppercase">Strategies</p><p className="text-2xl font-bold text-orange-600 mt-1">{withStrategies}</p></div>
+              <div><p className="text-xs text-gray-400 uppercase">Groups</p><p className="text-2xl font-bold text-orange-600 mt-1">{withStrategies}</p></div>
               <div className="p-2 bg-orange-50 rounded-lg"><FiTrendingUp className="text-orange-500" size={20} /></div>
             </div>
           </div>
         </div>
 
-        {/* Search Bar */}
+        {/* Search Bar - Changed Refresh to Create User */}
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-6">
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="relative flex-1 w-full">
@@ -813,8 +891,9 @@ export default function UsersTables() {
               {search && <button onClick={() => setSearch("")} className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600">✕</button>}
             </div>
             <div className="text-sm text-gray-500 bg-gray-100 px-3 py-1.5 rounded-lg">{filtered.length} / {users.length} users</div>
-            <button onClick={fetchUsers} className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#FB3800] to-orange-500 text-white rounded-lg hover:from-orange-500 hover:to-[#FB3800] transition-all shadow-sm">
-              <FiRefreshCw size={16} /> Refresh
+            <button onClick={() => setIsCreateUserModalOpen(true)} 
+              className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#FB3800] to-orange-500 text-white rounded-lg hover:from-orange-500 hover:to-[#FB3800] transition-all shadow-sm">
+              <FiPlus size={16} /> Create User
             </button>
           </div>
         </div>
@@ -826,7 +905,7 @@ export default function UsersTables() {
         {error && !loading && (<div className="bg-red-50 border border-red-200 rounded-xl p-5 mb-6"><div className="flex items-center gap-3"><FiXCircle className="h-5 w-5 text-red-500" /><div><p className="font-medium text-red-800">Error Loading Users</p><p className="text-sm text-red-600">{error}</p></div></div></div>)}
 
         {/* Empty State */}
-        {!loading && !error && users.length === 0 && (<div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center"><div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6"><FiUser className="h-10 w-10 text-gray-400" /></div><h3 className="text-xl font-bold text-gray-700 mb-2">No users found</h3><p className="text-gray-500 mb-6">Get started by adding your first user</p><button onClick={fetchUsers} className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#FB3800] to-orange-500 text-white rounded-lg hover:from-orange-500 hover:to-[#FB3800] transition-all shadow-sm"><FiRefreshCw size={16} />Refresh to Load Users</button></div>)}
+        {!loading && !error && users.length === 0 && (<div className="bg-white rounded-xl shadow-sm border border-gray-100 p-12 text-center"><div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6"><FiUser className="h-10 w-10 text-gray-400" /></div><h3 className="text-xl font-bold text-gray-700 mb-2">No users found</h3><p className="text-gray-500 mb-6">Get started by adding your first user</p><button onClick={() => setIsCreateUserModalOpen(true)} className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#FB3800] to-orange-500 text-white rounded-lg hover:from-orange-500 hover:to-[#FB3800] transition-all shadow-sm"><FiPlus size={16} />Create User</button></div>)}
 
         {/* AG Grid */}
         {!loading && !error && users.length > 0 && (
@@ -843,14 +922,190 @@ export default function UsersTables() {
         {/* Portal Dropdown */}
         {openMenuId && filtered.find((u: any) => u.id === openMenuId) && createPortal(<ActionsMenu user={filtered.find((u: any) => u.id === openMenuId)! as User} />, document.body)}
 
+        {/* Create User Modal */}
+        {isCreateUserModalOpen && (
+          <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={() => setIsCreateUserModalOpen(false)} />
+            <div className="relative z-10 w-full max-w-md bg-white rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto">
+              <div className="sticky top-0 bg-gradient-to-r from-[#FB3800] to-orange-500 px-6 py-4 flex justify-between items-center">
+                <div className="flex items-center gap-3">
+                  <div className="p-2 bg-white/20 rounded-lg">
+                    <FiPlus className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-white">Create New User</h3>
+                    <p className="text-orange-100 text-sm">Add a new user to the system</p>
+                  </div>
+                </div>
+                <button onClick={() => setIsCreateUserModalOpen(false)} className="text-white hover:text-orange-100 transition p-2 rounded-lg hover:bg-white/10">
+                  ✕
+                </button>
+              </div>
+
+              <div className="p-6">
+                <form onSubmit={handleCreateUserSubmit} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        First Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="First name"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                        required
+                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] transition-all outline-none text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                        Last Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        placeholder="Last name"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                        required
+                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] transition-all outline-none text-sm"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Email Address <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="Enter email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] transition-all outline-none text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Mobile Number <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      placeholder="Enter mobile number"
+                      value={mob}
+                      onChange={(e) => setMob(e.target.value)}
+                      required
+                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] transition-all outline-none text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Select Broker <span className="text-red-500">*</span>
+                    </label>
+                    <select
+                      className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] transition-all outline-none text-sm"
+                      value={broker}
+                      onChange={(e) => setBroker(e.target.value)}
+                      required
+                    >
+                      <option value="">Choose a broker</option>
+                      {brokers.map((b: any) => (
+                        <option key={b.id} value={b.brokerName}>
+                          {b.brokerName}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      Password <span className="text-red-500">*</span>
+                    </label>
+                    <div className="relative">
+                      <input
+                        type={showPassword ? "text" : "password"}
+                        placeholder="Create a strong password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-gray-900 placeholder-gray-400 focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] transition-all outline-none text-sm pr-12"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 -translate-y-1/2"
+                      >
+                        {showPassword ? (
+                          <FiEye className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+                        ) : (
+                          <FiEyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+                        )}
+                      </button>
+                    </div>
+                    <p className="text-xs text-gray-400 mt-1">
+                      Use 8+ characters with letters & numbers
+                    </p>
+                  </div>
+
+                  <div className="flex items-center gap-3 pt-2">
+                    <input
+                      type="checkbox"
+                      id="terms"
+                      checked={isChecked}
+                      onChange={(e) => setIsChecked(e.target.checked)}
+                      className="w-4 h-4 text-[#FB3800] rounded border-gray-300 focus:ring-[#FB3800]/20"
+                    />
+                    <label htmlFor="terms" className="text-sm text-gray-600">
+                      I agree to the Terms and Conditions
+                    </label>
+                  </div>
+
+                  <button
+                    type="submit"
+                    disabled={createLoading}
+                    className="w-full bg-gradient-to-r from-[#FB3800] to-orange-500 text-white py-3 rounded-xl font-semibold hover:shadow-lg hover:shadow-[#FB3800]/20 hover:scale-[1.02] transform transition-all duration-200 disabled:opacity-60 disabled:cursor-not-allowed disabled:hover:scale-100 mt-2"
+                  >
+                    {createLoading ? (
+                      <div className="flex items-center justify-center gap-2">
+                        <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent"></div>
+                        Creating User...
+                      </div>
+                    ) : (
+                      <>
+                        <FiPlus className="h-5 w-5 inline mr-2" />
+                        Create User
+                      </>
+                    )}
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* Package Modal */}
         {isGroupModalOpen && (<div className="fixed inset-0 z-50 flex items-center justify-center p-4"><div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closeGroupModal} /><div className="relative z-10 w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden"><div className="bg-gradient-to-r from-indigo-500 to-indigo-600 px-6 py-4 flex items-center gap-3"><div className="p-2 bg-white/20 rounded-lg"><FiPackage className="h-5 w-5 text-white" /></div><div><h3 className="text-lg font-semibold text-white">Assign Package</h3><p className="text-indigo-100 text-sm">Assign a package to {selectedUserForGroup?.firstName}</p></div></div><div className="p-6 space-y-4"><div><label className="block text-sm font-medium text-gray-700 mb-1">Package Name *</label><input value={groupName} onChange={(e) => setGroupName(e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" placeholder="Enter package name" autoFocus /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Package Description</label><textarea value={groupDescription} onChange={(e) => setGroupDescription(e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" rows={3} placeholder="Enter package description" /></div><div className="grid grid-cols-2 gap-4"><div><label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label><div className="relative"><FiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} /><input type="date" value={packageFromDate} onChange={(e) => setPackageFromDate(e.target.value)} className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" /></div></div><div><label className="block text-sm font-medium text-gray-700 mb-1">End Date</label><div className="relative"><FiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} /><input type="date" value={date} onChange={(e) => setDate(e.target.value)} className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" /></div></div></div></div><div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3"><button onClick={closeGroupModal} disabled={creating} className="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-100 transition-all">Cancel</button><button onClick={submitCreateGroup} disabled={creating} className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-indigo-600 text-white rounded-lg hover:from-indigo-600 hover:to-indigo-700 transition-all disabled:opacity-50 flex items-center gap-2">{creating ? (<><div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>Assigning...</>) : (<><FiPackage size={14} />Assign Package</>)}</button></div></div></div>)}
 
         {/* Strategy Assign Modal */}
-        {isPackageAssignModalOpen && (<div className="fixed inset-0 z-50 flex items-center justify-center p-4"><div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closePackageModal} /><div className="relative z-10 w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden"><div className="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4 flex items-center gap-3"><div className="p-2 bg-white/20 rounded-lg"><FiTrendingUp className="h-5 w-5 text-white" /></div><div><h3 className="text-lg font-semibold text-white">Assign Strategy</h3><p className="text-purple-100 text-sm">Choose a strategy for {selectedUserForGroup?.firstName}</p></div></div><div className="p-6"><div><label className="block text-sm font-medium text-gray-700 mb-1">Select Strategy *</label><select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all" value={selectedStrategyId} onChange={(e) => { setSelectedStrategyId(e.target.value); const selected = strategyList.find((s: any) => s.id == e.target.value); if (selected) { setGroupName(selected.strategyName); setGroupDescription(selected.strategyDis); } }}><option value="">Choose a strategy</option>{strategyList.map((s: any) => (<option value={s.id} key={s.id}>{s.strategyName}</option>))}</select></div>{selectedStrategyId && (<div className="mt-4 p-4 bg-purple-50 rounded-lg"><h4 className="font-medium text-purple-900 mb-1">Selected Strategy</h4><p className="text-sm text-purple-700">{groupDescription}</p></div>)}</div><div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3"><button onClick={closePackageModal} className="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-100 transition-all">Cancel</button><button onClick={submitCreateStrtegy} className="px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all flex items-center gap-2"><FiTrendingUp size={14} />Assign Strategy</button></div></div></div>)}
+        {isPackageAssignModalOpen && (<div className="fixed inset-0 z-50 flex items-center justify-center p-4"><div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={closePackageModal} /><div className="relative z-10 w-full max-w-md bg-white rounded-xl shadow-xl overflow-hidden"><div className="bg-gradient-to-r from-purple-500 to-purple-600 px-6 py-4 flex items-center gap-3"><div className="p-2 bg-white/20 rounded-lg"><FiTrendingUp className="h-5 w-5 text-white" /></div><div><h3 className="text-lg font-semibold text-white">Assign Group</h3><p className="text-purple-100 text-sm">Choose a Group for {selectedUserForGroup?.firstName}</p></div></div><div className="p-6"><div><label className="block text-sm font-medium text-gray-700 mb-1">Select Group *</label><select className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all" value={selectedStrategyId} onChange={(e) => { setSelectedStrategyId(e.target.value); const selected = strategyList.find((s: any) => s.id == e.target.value); if (selected) { setGroupName(selected.strategyName); setGroupDescription(selected.strategyDis); } }}><option value="">Choose a group</option>{strategyList.map((s: any) => (<option value={s.id} key={s.id}>{s.strategyName}</option>))}</select></div>{selectedStrategyId && (<div className="mt-4 p-4 bg-purple-50 rounded-lg"><h4 className="font-medium text-purple-900 mb-1">Selected Group</h4><p className="text-sm text-purple-700">{groupDescription}</p></div>)}</div><div className="px-6 py-4 bg-gray-50 border-t border-gray-100 flex justify-end gap-3"><button onClick={closePackageModal} className="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-100 transition-all">Cancel</button><button onClick={submitCreateStrtegy} className="px-4 py-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white rounded-lg hover:from-purple-600 hover:to-purple-700 transition-all flex items-center gap-2"><FiTrendingUp size={14} />Assign Group</button></div></div></div>)}
 
         {/* Edit Modal */}
-        {isEditModalOpen && editForm && (<div className="fixed inset-0 z-[99999] flex items-center justify-center p-4"><div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={handleCloseEditModal} /><div className="relative z-10 w-full max-w-4xl bg-white rounded-xl shadow-xl max-h-[90vh] overflow-y-auto"><div className="sticky top-0 bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-4 flex justify-between items-center"><div className="flex items-center gap-3"><div className="p-2 bg-white/20 rounded-lg"><FiEdit className="h-5 w-5 text-white" /></div><div><h3 className="text-lg font-semibold text-white">Update User Profile</h3><p className="text-amber-100 text-sm">Editing {editingUser?.firstName}'s information</p></div></div><button onClick={handleCloseEditModal} className="text-white hover:text-amber-100 transition p-2 rounded-lg hover:bg-white/10">✕</button></div><div className="p-6 space-y-6"><div className="bg-gray-50 rounded-xl p-5"><h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"><FiUser className="h-5 w-5 text-blue-500" />Personal Information</h4><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label className="block text-sm font-medium text-gray-700 mb-1">First Name</label><input type="text" value={editForm.firstName} onChange={(e) => updateEditForm("firstName", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label><input type="text" value={editForm.lastName} onChange={(e) => updateEditForm("lastName", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Email *</label><input type="email" value={editForm.email} onChange={(e) => updateEditForm("email", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Username *</label><input type="text" value={editForm.username} onChange={(e) => updateEditForm("username", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label><input type="text" value={editForm.phoneNumber} onChange={(e) => updateEditForm("phoneNumber", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Role</label><select value={editForm.role} onChange={(e) => updateEditForm("role", e.target.value as Role)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"><option value="user">User</option><option value="clone-user">Clone User</option></select></div><div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200"><input id="edit-isChecked" type="checkbox" checked={editForm.isChecked} onChange={(e) => updateEditForm("isChecked", e.target.checked)} className="rounded focus:ring-blue-500 h-4 w-4 text-blue-600" /><label htmlFor="edit-isChecked" className="text-sm font-medium text-gray-700">Account Verified</label></div></div></div><div className="bg-gray-50 rounded-xl p-5"><h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"><FiDatabase className="h-5 w-5 text-purple-500" />Broker & Strategy</h4><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label className="block text-sm font-medium text-gray-700 mb-1">Public IP</label><input type="text" value={editForm.publicIp || ""} onChange={(e) => updateEditForm("publicIp", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Instance ID</label><input type="text" value={editForm.instanceId || ""} onChange={(e) => updateEditForm("instanceId", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Broker Name</label><select value={editForm.brokerName} onChange={(e) => { const selectedBroker = brokers.find(b => b.brokerName === e.target.value); updateEditForm("brokerName", selectedBroker?.brokerName); updateEditForm("brokerImageLink", selectedBroker?.brokerLink); }} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"><option value="">Select broker</option>{brokers.map((broker) => (<option key={broker.brokerName} value={broker.brokerName}>{broker.brokerName}</option>))}</select></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Broker Image URL</label><input type="text" value={editForm.brokerImageLink} onChange={(e) => updateEditForm("brokerImageLink", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all" readOnly /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Strategy Name</label><input type="text" value={editForm.strategyName} onChange={(e) => updateEditForm("strategyName", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Strategy Description</label><textarea value={editForm.strategyDis} onChange={(e) => updateEditForm("strategyDis", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all" rows={2} /></div></div></div><div className="bg-gray-50 rounded-xl p-5"><h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"><FiPackage className="h-5 w-5 text-indigo-500" />Package Details</h4><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label className="block text-sm font-medium text-gray-700 mb-1">Package Name</label><input type="text" value={editForm.packageName} onChange={(e) => updateEditForm("packageName", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Package Description</label><textarea value={editForm.packageDis} onChange={(e) => updateEditForm("packageDis", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" rows={2} /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label><div className="relative"><FiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} /><input type="date" value={editForm.packageFromDate} onChange={(e) => updateEditForm("packageFromDate", e.target.value)} className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" /></div></div><div><label className="block text-sm font-medium text-gray-700 mb-1">End Date</label><div className="relative"><FiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} /><input type="date" value={editForm.packageDate} onChange={(e) => updateEditForm("packageDate", e.target.value)} className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" /></div></div></div></div><div className="bg-gray-50 rounded-xl p-5"><h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"><FiTag className="h-5 w-5 text-teal-500" />Source Details</h4><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label className="block text-sm font-medium text-gray-700 mb-1">Source Name</label><select value={editForm.sourceName || ""} onChange={(e) => updateEditForm("sourceName", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="">Select Source</option>{sourceList.map((src) => (<option key={src} value={src}>{src}</option>))}</select></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Employee Name</label><select value={editForm.employeeName || ""} onChange={(e) => updateEditForm("employeeName", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-teal-500/20 focus:border-teal-500 transition-all"><option value="">Select Employee</option>{employeeList.map((emp) => (<option key={emp} value={emp}>{emp}</option>))}</select></div></div></div><div className="bg-gray-50 rounded-xl p-5"><h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"><FiShield className="h-5 w-5 text-red-500" />Risk & Popup Settings</h4><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label className="block text-sm font-medium text-gray-700 mb-1">Demat Fund (₹)</label><input type="number" step="1000" value={editForm.DematFund} onChange={(e) => updateEditForm("DematFund", parseFloat(e.target.value) || 0)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Risk Limit (₹)</label><input type="number" step="1000" value={editForm.riskLimit} onChange={(e) => updateEditForm("riskLimit", parseFloat(e.target.value) || 0)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Public IP</label><input type="text" value={editForm.publicIp || ""} onChange={(e) => updateEditForm("publicIp", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Instance ID</label><input type="text" value={editForm.instanceId || ""} onChange={(e) => updateEditForm("instanceId", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Status</label><input type="text" value={editForm.status || ""} onChange={(e) => updateEditForm("status", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">HTML Content</label><input type="text" value={editForm.popupHtmlContent || ""} onChange={(e) => updateEditForm("popupHtmlContent", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" /></div><div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200"><input id="edit-riskMngtActive" type="checkbox" checked={editForm.riskMngtActive} onChange={(e) => updateEditForm("riskMngtActive", e.target.checked)} className="rounded focus:ring-red-500 h-4 w-4 text-red-600" /><label htmlFor="edit-riskMngtActive" className="text-sm font-medium text-gray-700">Enable Risk Management</label></div><div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200"><input id="edit-showPopup" type="checkbox" checked={editForm.showPopup} onChange={(e) => updateEditForm("showPopup", e.target.checked)} className="rounded focus:ring-green-500 h-4 w-4 text-green-600" /><label htmlFor="edit-showPopup" className="text-sm font-medium text-gray-700">Show Popup Notifications</label></div></div></div></div><div className="sticky bottom-0 px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-3"><button onClick={handleCloseEditModal} className="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-100 transition-all">Cancel</button><button onClick={handleUpdate} className="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg hover:from-amber-600 hover:to-amber-700 transition-all flex items-center gap-2"><FiEdit size={14} />Update User</button></div></div></div>)}
+        {isEditModalOpen && editForm && (<div className="fixed inset-0 z-[99999] flex items-center justify-center p-4"><div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={handleCloseEditModal} />
+        <div className="relative z-10 w-full max-w-4xl bg-white rounded-xl shadow-xl max-h-[90vh] overflow-y-auto"><div className="sticky top-0 bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-4 flex justify-between items-center"><div className="flex items-center gap-3"><div className="p-2 bg-white/20 rounded-lg"><FiEdit className="h-5 w-5 text-white" /></div><div><h3 className="text-lg font-semibold text-white">Update User Profile</h3><p className="text-amber-100 text-sm">Editing {editingUser?.firstName}'s information</p></div></div><button onClick={handleCloseEditModal} className="text-white hover:text-amber-100 transition p-2 rounded-lg hover:bg-white/10">✕</button></div><div className="p-6 space-y-6"><div className="bg-gray-50 rounded-xl p-5"><h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"><FiUser className="h-5 w-5 text-blue-500" />Personal Information</h4><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label className="block text-sm font-medium text-gray-700 mb-1">First Name</label><input type="text" value={editForm.firstName} onChange={(e) => updateEditForm("firstName", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Last Name</label><input type="text" value={editForm.lastName} onChange={(e) => updateEditForm("lastName", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Email *</label><input type="email" value={editForm.email} onChange={(e) => updateEditForm("email", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Username *</label><input type="text" value={editForm.username} onChange={(e) => updateEditForm("username", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label><input type="text" value={editForm.phoneNumber} onChange={(e) => updateEditForm("phoneNumber", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Role</label><select value={editForm.role} onChange={(e) => updateEditForm("role", e.target.value as Role)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all"><option value="user">User</option><option value="clone-user">Clone User</option></select></div><div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200"><input id="edit-isChecked" type="checkbox" checked={editForm.isChecked} onChange={(e) => updateEditForm("isChecked", e.target.checked)} className="rounded focus:ring-blue-500 h-4 w-4 text-blue-600" /><label htmlFor="edit-isChecked" className="text-sm font-medium text-gray-700">Account Verified</label></div></div></div><div className="bg-gray-50 rounded-xl p-5"><h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"><FiDatabase className="h-5 w-5 text-purple-500" />Broker & Group</h4><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label className="block text-sm font-medium text-gray-700 mb-1">Public IP</label><input type="text" value={editForm.publicIp || ""} onChange={(e) => updateEditForm("publicIp", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Instance ID</label><input type="text" value={editForm.instanceId || ""} onChange={(e) => updateEditForm("instanceId", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Broker Name</label><select value={editForm.brokerName} onChange={(e) => { const selectedBroker = brokers.find(b => b.brokerName === e.target.value); updateEditForm("brokerName", selectedBroker?.brokerName); updateEditForm("brokerImageLink", selectedBroker?.brokerLink); }} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all"><option value="">Select broker</option>{brokers.map((broker) => (<option key={broker.brokerName} value={broker.brokerName}>{broker.brokerName}</option>))}</select></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Broker Image URL</label><input type="text" value={editForm.brokerImageLink} onChange={(e) => updateEditForm("brokerImageLink", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all" readOnly /></div>
+        <div><label className="block text-sm font-medium text-gray-700 mb-1">Group Name</label><input type="text" value={editForm.strategyName} onChange={(e) => updateEditForm("strategyName", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Group Description</label><textarea value={editForm.strategyDis} onChange={(e) => updateEditForm("strategyDis", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 transition-all" rows={2} /></div></div></div><div className="bg-gray-50 rounded-xl p-5"><h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"><FiPackage className="h-5 w-5 text-indigo-500" />Package Details</h4><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label className="block text-sm font-medium text-gray-700 mb-1">Package Name</label><input type="text" value={editForm.packageName} onChange={(e) => updateEditForm("packageName", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Package Description</label><textarea value={editForm.packageDis} onChange={(e) => updateEditForm("packageDis", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" rows={2} /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Start Date</label><div className="relative"><FiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} /><input type="date" value={editForm.packageFromDate} onChange={(e) => updateEditForm("packageFromDate", e.target.value)} className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" /></div></div><div><label className="block text-sm font-medium text-gray-700 mb-1">End Date</label>
+        <div className="relative"><FiCalendar className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={14} /><input type="date" value={editForm.packageDate} onChange={(e) => updateEditForm("packageDate", e.target.value)} className="w-full pl-9 pr-3 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all" /></div></div></div></div><div className="bg-gray-50 rounded-xl p-5">
+       
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+          </div>
+          
+          
+          
+          </div>
+          <div className="bg-gray-50 rounded-xl p-5"><h4 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2"><FiShield className="h-5 w-5 text-red-500" />Risk & Popup Settings</h4><div className="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label className="block text-sm font-medium text-gray-700 mb-1">Demat Fund (₹)</label><input type="number" step="1000" value={editForm.DematFund} onChange={(e) => updateEditForm("DematFund", parseFloat(e.target.value) || 0)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Risk Limit (₹)</label><input type="number" step="1000" value={editForm.riskLimit} onChange={(e) => updateEditForm("riskLimit", parseFloat(e.target.value) || 0)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Public IP</label><input type="text" value={editForm.publicIp || ""} onChange={(e) => updateEditForm("publicIp", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Instance ID</label><input type="text" value={editForm.instanceId || ""} onChange={(e) => updateEditForm("instanceId", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">Status</label><input type="text" value={editForm.status || ""} onChange={(e) => updateEditForm("status", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" /></div><div><label className="block text-sm font-medium text-gray-700 mb-1">HTML Content</label><input type="text" value={editForm.popupHtmlContent || ""} onChange={(e) => updateEditForm("popupHtmlContent", e.target.value)} className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-red-500/20 focus:border-red-500 transition-all" /></div><div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200"><input id="edit-riskMngtActive" type="checkbox" checked={editForm.riskMngtActive} onChange={(e) => updateEditForm("riskMngtActive", e.target.checked)} className="rounded focus:ring-red-500 h-4 w-4 text-red-600" /><label htmlFor="edit-riskMngtActive" className="text-sm font-medium text-gray-700">Enable Risk Management</label></div><div className="flex items-center gap-3 p-3 bg-white rounded-lg border border-gray-200"><input id="edit-showPopup" type="checkbox" checked={editForm.showPopup} onChange={(e) => updateEditForm("showPopup", e.target.checked)} className="rounded focus:ring-green-500 h-4 w-4 text-green-600" /><label htmlFor="edit-showPopup" className="text-sm font-medium text-gray-700">Show Popup Notifications</label></div></div></div></div><div className="sticky bottom-0 px-6 py-4 bg-gray-50 border-t border-gray-200 flex justify-end gap-3"><button onClick={handleCloseEditModal} className="px-4 py-2 border border-gray-200 rounded-lg text-gray-700 hover:bg-gray-100 transition-all">Cancel</button><button onClick={handleUpdate} className="px-4 py-2 bg-gradient-to-r from-amber-500 to-amber-600 text-white rounded-lg hover:from-amber-600 hover:to-amber-700 transition-all flex items-center gap-2"><FiEdit size={14} />Update User</button></div></div></div>)}
       </div>
     </div>
   );

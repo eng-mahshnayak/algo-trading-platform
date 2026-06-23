@@ -8,7 +8,7 @@ import "ag-grid-community/styles/ag-theme-alpine.css";
 import { SiRclone } from "react-icons/si";
 
 import { RiDeleteBin5Fill } from "react-icons/ri";
-import { FaUpload } from "react-icons/fa6";
+
 import { IoCreateSharp } from "react-icons/io5";
 import { FiSearch, FiRefreshCw, FiTrendingUp } from "react-icons/fi";
 import {
@@ -375,15 +375,17 @@ useEffect(() => {
     }
   };
 
-  const handleOpenFileModal = (userId: number) => {
-    setUploadingUserId(userId);
-    setExcelFile(null);
-    setIsFileModalOpen(true);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = "";
-    }
-    closeActionMenu();
-  };
+  // const handleOpenFileModal = (userId: number) => {
+  //   setUploadingUserId(userId);
+  //   setExcelFile(null);
+  //   setIsFileModalOpen(true);
+  //   if (fileInputRef.current) {
+  //     fileInputRef.current.value = "";
+  //   }
+  //   closeActionMenu();
+  // };
+
+
 
   const handleCloseFileModal = () => {
     setIsFileModalOpen(false);
@@ -806,15 +808,7 @@ useEffect(() => {
               <RiDeleteBin5Fill className="w-4 h-4" />
               <span>Delete User</span>
             </button>
-            <button
-              onClick={() => {
-                handleOpenFileModal(openActionId);
-              }}
-              className="flex items-center w-full gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-green-50 hover:text-green-700 transition-colors"
-            >
-              <FaUpload className="w-4 h-4" />
-              <span>Upload Excel</span>
-            </button>
+        
             <button
               onClick={() => {
                 const user = users.find(u => u.id === openActionId);

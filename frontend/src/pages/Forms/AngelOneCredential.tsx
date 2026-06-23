@@ -1,401 +1,251 @@
-// import { FC, useState } from "react";
-// import Input from "../../components/form/input/InputField";
-// import Button from "../../components/ui/button/Button";
-// import Label from "../../components/form/Label";
-// import { EyeCloseIcon, EyeIcon } from "../../icons";
-// import axios from "axios";
-// import { toast } from "react-toastify";
-
-// const AngelOneCredential: FC = () => {
-
-//     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
-//     const [showNewPassword, setShowNewPassword] = useState(false);
-//     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-//     const [currentPassword, setCurrentPassword] = useState("");
-//     const [newPassword, setNewPassword] = useState("");
-//     const [confirmPassword, setConfirmPassword] = useState("");
-//     const apiUrl = import.meta.env.VITE_API_URL;
-
-//     const handleSubmit = async (e: React.FormEvent) => {
-//         e.preventDefault();
-
-//         try {
-//             const storedUser = localStorage.getItem("user");
-//             if (!storedUser) {
-//                 toast.error("user not logged in");
-//                 return;
-//             }
-
-//             const { id } = JSON.parse(storedUser);
-
-//             const res = await axios.put(`${apiUrl}/auth/update-password`, {
-//                 id,
-//                 currentPassword,
-//                 newPassword,
-//                 confirmPassword
-//             })
-
-//             toast.success(res.data.message);
-//             setCurrentPassword("");
-//             setNewPassword("");
-//             setConfirmPassword("");
-//         } catch (err: any) {
-//             toast.error(err.response?.data?.message || "Something went wrong");
-//         }
-//     }
-
-//     return (
-//         <section className="bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-//             <div className="w-full p-6 bg-white rounded-lg shadow dark:border  dark:bg-gray-800 dark:border-gray-700">
-//                 <h2 className="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center">
-//                   AngelOne Credential
-//                 </h2>
-//                 <form className="mt-4 space-y-4 lg:mt-5 md:space-y-5" action="#" onSubmit={handleSubmit}>
-//                     <div>
-//                         <Label
-//                             htmlFor="current-password"
-//                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-//                         >
-//                            Client Id 
-//                         </Label>
-//                         <div className="relative">
-//                             <Input
-//                                 type={showCurrentPassword ? "text" : "password"}
-//                                 value={currentPassword}
-//                                 onChange={(e) => setCurrentPassword(e.target.value)}
-//                                 name="current-password"
-//                                 id="current-password"
-                              
-//                                 required
-//                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-//                 focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 
-//                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
-//                 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-//                             />
-//                             <span
-//                                 onClick={() => setShowCurrentPassword(!showCurrentPassword)}
-//                                 className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
-//                             >
-//                                 {showCurrentPassword ? (
-//                                     <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-//                                 ) : (
-//                                     <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-//                                 )}
-//                             </span>
-//                         </div>
-//                     </div>
-//                     <div>
-//                         <Label
-//                             htmlFor="password"
-//                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-//                         >
-//                            TOTP Secret
-//                         </Label>
-//                         <div className="relative">
-//                             <Input
-//                                 type={showNewPassword ? "text" : "password"}
-//                                 value={newPassword}
-//                                 onChange={(e) => setNewPassword(e.target.value)}
-//                                 name="password"
-//                                 id="password"
-                               
-//                                 required
-//                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-//                 focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 
-//                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
-//                 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-//                             />
-//                             <span
-//                                 onClick={() => setShowNewPassword(!showNewPassword)}
-//                                 className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
-//                             >
-//                                 {showNewPassword ? (
-//                                     <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-//                                 ) : (
-//                                     <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-//                                 )}
-//                             </span>
-//                         </div>
-//                     </div>
-
-//                     {/* Confirm Password */}
-//                     <div>
-//                         <Label
-//                             htmlFor="confirm-password"
-//                             className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-//                         >
-//                              password
-//                         </Label>
-//                         <div className="relative">
-//                             <Input
-//                                 type={showConfirmPassword ? "text" : "password"}
-//                                 value={confirmPassword}
-//                                 onChange={(e) => setConfirmPassword(e.target.value)}
-//                                 name="confirm-password"
-//                                 id="confirm-password"
-                               
-//                                 required
-//                                 className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-//                 focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 
-//                 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
-//                 dark:focus:ring-blue-500 dark:focus:border-blue-500"
-//                             />
-//                             <span
-//                                 onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-//                                 className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
-//                             >
-//                                 {showConfirmPassword ? (
-//                                     <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-//                                 ) : (
-//                                     <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-//                                 )}
-//                             </span>
-//                         </div>
-//                     </div>
-//                     <Button
-//                         type="submit"
-//                         className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 
-//             focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 
-//             text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-//                     >
-//                         Reset password
-//                     </Button>
-//                 </form>
-//             </div>
-//         </section>
-//     );
-// };
-
-// export default AngelOneCredential;
-
-
-import { FC, useState,useEffect } from "react";
-import Input from "../../components/form/input/InputField";
-import Button from "../../components/ui/button/Button";
-import Label from "../../components/form/Label";
-import { EyeCloseIcon, EyeIcon } from "../../icons";
-import axios from "axios";
+import { FC, useState, useEffect } from "react";
 import { toast } from "react-toastify";
+import axios from "axios";
+import { 
+  Shield, 
+  Key, 
+  Lock, 
+  Eye, 
+  EyeOff, 
+  User, 
+  Fingerprint,
+  Save,
+  RefreshCw,
+
+} from "lucide-react";
 
 const AngelOneCredential: FC = () => {
-
   const apiUrl = import.meta.env.VITE_API_URL;
 
-  // 🔑 Form fields
   const [clientId, setClientId] = useState("");
   const [totpSecret, setTotpSecret] = useState("");
   const [password, setPassword] = useState("");
-    const [apiKey, setApiKey] = useState("");
-
-  // 👁️ Toggles
+  const [apiKey, setApiKey] = useState("");
   const [showTotp, setShowTotp] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [isSaved, setIsSaved] = useState(false);
 
+  console.log(isSaved);
+  
 
   useEffect(() => {
-  const fetchData = async () => {
-    try {
-      const res = await axios.get(`${apiUrl}/angelone/credential/get`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-          AngelOneToken: localStorage.getItem("angel_token"),
-        },
-      });
+    const fetchData = async () => {
+      try {
+        const res = await axios.get(`${apiUrl}/angelone/credential/get`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            AngelOneToken: localStorage.getItem("angel_token"),
+          },
+        });
 
-      
-
-      if (res.data.status) {
-
-        setClientId(res?.data?.data?.clientId||"");
-        setTotpSecret(res?.data?.data?.totpSecret||"")
-        setPassword(res?.data?.data?.password||"");
-        setApiKey(res?.data?.data?.apiKey||"")
+        if (res.data.status) {
+          setClientId(res?.data?.data?.clientId || "");
+          setTotpSecret(res?.data?.data?.totpSecret || "");
+          setPassword(res?.data?.data?.password || "");
+          setApiKey(res?.data?.data?.apiKey || "");
+          if (res?.data?.data?.clientId) {
+            setIsSaved(true);
+          }
+        }
+      } catch (err) {
+        toast.error("Failed to load credentials");
       }
-    } catch (err) {
-      toast.error("Failed to load credentials");
-    }
-  };
+    };
 
-  fetchData();
-}, []);
-
+    fetchData();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
+      const reqData = {
+        clientId: clientId,
+        totpSecret: totpSecret,
+        password: password,
+        apiKey: apiKey,
+      };
 
-            let reqData = {
-                clientId:clientId,
-                totpSecret:totpSecret,
-                password:password,
-                apiKey:apiKey
-            }
+      const res = await axios.post(`${apiUrl}/angelone/credential/create`, reqData, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
+          AngelOneToken: localStorage.getItem("angel_token") || "",
+        },
+      });
 
-            let res = await axios.post(`${apiUrl}/angelone/credential/create`, reqData, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token") || ""}`,
-                        "AngelOneToken": localStorage.getItem("angel_token") || "",
-                    },
-             })
-
-             if(res.data.status==true) {
-              
-              toast.success(res?.data?.message);
-              // setClientId("");
-              // setTotpSecret("");
-              // setPassword("");
-                    
-             }else{
-              toast.error(res?.data?.message || "Something went wrong");
-             
-             }
+      if (res.data.status == true) {
+        toast.success(res?.data?.message);
+        setIsSaved(true);
+      } else {
+        toast.error(res?.data?.message || "Something went wrong");
+      }
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Something went wrong");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <section className="bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
-      <div className="w-full p-6 bg-white rounded-lg shadow dark:border dark:bg-gray-800 dark:border-gray-700">
-        <h2 className="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white text-center">
-          AngelOne Credential
-        </h2>
-
-        <form className="mt-4 space-y-4 lg:mt-5 md:space-y-5" onSubmit={handleSubmit}>
-          {/* Client Id */}
-          <div>
-            <Label
-              htmlFor="client-id"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Client Id <span className="text-error-500">*</span>
-            </Label>
-            <div className="relative">
-              <Input
-                type="text"
-                value={clientId}
-                onChange={(e) => setClientId(e.target.value)}
-                name="client-id"
-                id="client-id"
-                placeholder="e.g. ABC123"
-                required
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-                  focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 
-                  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
-                  dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
-            </div>
-          </div>
-
-          {/* TOTP Secret */}
-          <div>
-            <Label
-              htmlFor="totp-secret"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              TOTP Secret <span className="text-error-500">*</span>
-            </Label>
-            <div className="relative">
-              <Input
-                type={showTotp ? "text" : "password"}
-                value={totpSecret}
-                onChange={(e) => setTotpSecret(e.target.value)}
-                name="totp-secret"
-                id="totp-secret"
-                placeholder="Base32 secret from your Authenticator app"
-                required
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-                  focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 
-                  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
-                  dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
-              <span
-                onClick={() => setShowTotp(!showTotp)}
-                className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
-              >
-                {showTotp ? (
-                  <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                ) : (
-                  <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                )}
-              </span>
-            </div>
-          </div>
-
-            {/* Client Id */}
-          <div>
-            <Label
-              htmlFor="apiKey"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              ApiKey  <span className="text-error-500">*</span>
-            </Label>
-            <div className="relative">
-              <Input
-                type="text"
-                value={apiKey}
-                onChange={(e) => setApiKey(e.target.value)}
-                name="apiKey"
-                id="apiKey"
-                placeholder="ABC123"
-                required
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-                  focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 
-                  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
-                  dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
-            </div>
-          </div>
-
-          {/* Password */}
-          <div>
-            <Label
-              htmlFor="ao-password"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Password <span className="text-error-500">*</span>
-            </Label>
-            <div className="relative">
-              <Input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                name="ao-password"
-                id="ao-password"
-                placeholder="Angel One account password"
-                required
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg 
-                  focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 
-                  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white 
-                  dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              />
-              <span
-                onClick={() => setShowPassword(!showPassword)}
-                className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
-              >
-                {showPassword ? (
-                  <EyeIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                ) : (
-                  <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
-                )}
-              </span>
-            </div>
-          </div>
-
-          <Button
-            type="submit"
-            className="w-full text-white bg-primary-600 hover:bg-primary-700 focus:ring-4 
-              focus:outline-none focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 
-              text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800"
-          >
-            Save Credentials
-          </Button>
-        </form>
+<div className="min-h-screen bg-gradient-to-br from-slate-50 to-slate-100 flex items-start justify-center pt-10 p-4 relative overflow-hidden">
+       <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-[#FB3800]/5 rounded-full blur-3xl"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/5 rounded-full blur-3xl"></div>
       </div>
-    </section>
+
+      {/* Simple Form Card - Only Form */}
+      <div className="relative w-full max-w-md">
+        <div className="bg-white rounded-3xl shadow-xl overflow-hidden border border-gray-100 p-8 lg:p-10">
+          <div className="w-full">
+           
+
+            <form onSubmit={handleSubmit} className="space-y-5">
+              {/* Client ID */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <User className="h-4 w-4 inline mr-2 text-[#FB3800]" />
+                  Client ID
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={clientId}
+                  onChange={(e) => setClientId(e.target.value)}
+                  placeholder="Enter your client ID"
+                  required
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl 
+                           text-gray-900 placeholder-gray-400
+                           focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] 
+                           transition-all duration-200 outline-none"
+                />
+              </div>
+
+              {/* API Key */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <Key className="h-4 w-4 inline mr-2 text-[#FB3800]" />
+                  API Key
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <input
+                  type="text"
+                  value={apiKey}
+                  onChange={(e) => setApiKey(e.target.value)}
+                  placeholder="Enter your API key"
+                  required
+                  className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl 
+                           text-gray-900 placeholder-gray-400
+                           focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] 
+                           transition-all duration-200 outline-none"
+                />
+              </div>
+
+              {/* TOTP Secret */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <Fingerprint className="h-4 w-4 inline mr-2 text-[#FB3800]" />
+                  TOTP Secret
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showTotp ? "text" : "password"}
+                    value={totpSecret}
+                    onChange={(e) => setTotpSecret(e.target.value)}
+                    placeholder="Base32 secret from authenticator app"
+                    required
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl 
+                             text-gray-900 placeholder-gray-400
+                             focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] 
+                             transition-all duration-200 outline-none pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowTotp(!showTotp)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                  >
+                    {showTotp ? (
+                      <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+                    ) : (
+                      <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Password */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <Lock className="h-4 w-4 inline mr-2 text-[#FB3800]" />
+                  Password
+                  <span className="text-red-500 ml-1">*</span>
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    placeholder="Enter your AngelOne password"
+                    required
+                    className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl 
+                             text-gray-900 placeholder-gray-400
+                             focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] 
+                             transition-all duration-200 outline-none pr-12"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2"
+                  >
+                    {showPassword ? (
+                      <Eye className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+                    ) : (
+                      <EyeOff className="h-5 w-5 text-gray-400 hover:text-gray-600 transition-colors" />
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-[#FB3800] to-orange-500 
+                         text-white py-3 rounded-xl font-semibold
+                         hover:shadow-lg hover:shadow-[#FB3800]/20 hover:scale-[1.02] 
+                         transform transition-all duration-200
+                         disabled:opacity-60 disabled:cursor-not-allowed
+                         disabled:hover:scale-100 mt-4"
+              >
+                {loading ? (
+                  <div className="flex items-center justify-center gap-2">
+                    <RefreshCw className="animate-spin h-5 w-5" />
+                    Saving...
+                  </div>
+                ) : (
+                  <>
+                    <Save className="h-5 w-5 inline mr-2" />
+                    Save Credentials
+                  </>
+                )}
+              </button>
+
+              {/* Security Note */}
+              <div className="mt-4 text-center">
+                <p className="text-xs text-gray-400 flex items-center justify-center gap-2">
+                  <Shield className="h-3 w-3" />
+                  Encrypted & securely stored
+                </p>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
   );
 };
 
 export default AngelOneCredential;
-

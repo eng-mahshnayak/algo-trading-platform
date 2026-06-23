@@ -837,7 +837,7 @@ const openCloneUserForm = async(data: any) => {
       },
       { headerName: "UserId", field: "userNameId", width: 120 },
       { headerName: "Broker", field: "broker", width: 130 },
-      { headerName: "StrategyUniqueId", field: "strategyUniqueId", width: 220, minWidth: 200 },
+      { headerName: "GroupUniqueId", field: "strategyUniqueId", width: 220, minWidth: 200 },
       { headerName: "SYMBOL", field: "tradingsymbol", width: 160 },
       { headerName: "Instrument", field: "instrumenttype", width: 140 },
       {
@@ -1444,8 +1444,8 @@ const openCloneUserForm = async(data: any) => {
     () => [
       {
         headerName: "",
-        width: 60,
-        minWidth: 60,
+        width: 40,
+        minWidth: 40,
         maxWidth: 65,
         cellRenderer: ExpandCellRenderer,
         sortable: false,
@@ -1705,9 +1705,9 @@ const openCloneUserForm = async(data: any) => {
         },
         cellRenderer: (p: any) => pnlPill(p.value),
       },
-      { headerName: "Strategy", field: "strategyName", width: 160, minWidth: 140 },
+      { headerName: "Group", field: "strategyName", width: 160, minWidth: 140 },
       { headerName: "O Qty", field: "quantity", width: 80 },
-      { headerName: "StrategyUniqueId", field: "strategyUniqueId", width: 220, minWidth: 200 },
+      { headerName: "GroupUniqueId", field: "strategyUniqueId", width: 220, minWidth: 200 },
       {
         headerName: "Type",
         field: "transactiontype",

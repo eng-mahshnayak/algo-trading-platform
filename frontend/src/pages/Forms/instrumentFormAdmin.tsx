@@ -476,7 +476,7 @@ const [buyTime, setBuyTime] = useState<string>(() => {
     }
 
     if (userType === "real" && !groupName) {
-      toast.error("Please Select Strategy!");
+      toast.error("Please Select Group!");
       return;
     }
 
@@ -822,7 +822,7 @@ const [buyTime, setBuyTime] = useState<string>(() => {
 
                 {userType === "real" && (
                   <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">Strategy</label>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">Group</label>
                     <select
                       className="w-full border border-gray-200 rounded-lg px-4 py-2.5 focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] transition-all"
                       value={selectedStrategyId}
@@ -833,7 +833,7 @@ const [buyTime, setBuyTime] = useState<string>(() => {
                         setGroupName(selected?.strategyName || "");
                       }}
                     >
-                      <option value="">Select Strategy</option>
+                      <option value="">Select Group</option>
                       {strategyList.map((s: any) => (
                         <option key={s.id} value={s.id}>{s.strategyName}</option>
                       ))}

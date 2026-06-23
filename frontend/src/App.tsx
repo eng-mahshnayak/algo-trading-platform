@@ -26,7 +26,7 @@ import AppLayout from "./layout/AppLayout";
 import { ScrollToTop } from "./components/common/ScrollToTop";
 // import Home from "./pages/Dashboard/Home";
 import AllUser from "./pages/admin/AllUsers";
-import UserReport from "./pages/admin/UserReport";
+
 import Broker from "./pages/admin/Broker";
 import Broadcast from "./pages/admin/Broadcast";
 import ActivityLogs from "./pages/admin/ActivityLogs";
@@ -66,16 +66,15 @@ import AdminCheckUserPosition from "./pages/Tables/UserPositionTableAdmin";
 import CandleChart from "./pages/Charts/CandleChart";
 import AdminCheckUserDeshboard from "./pages/Dashboard/AdminCheckUserDeshboard";
 import UserSession from "./pages/admin/UserSession";
-import PlatformSettingsPage from "./pages/Forms/PlatformSettingsPage";
+
 import { useEffect, useState } from "react";
 import axios from "axios";
 import UserSessionPageTable from "./pages/Tables/UserSessionTable";
-import WatchList from "./pages/Forms/WatchList";
+
 import FyersCrendential from "./pages/Forms/FyersCredential";
 // import RiskConfigPage from "./pages/Forms/RiskConfig";
 import KotakNeoCredential from "./pages/Forms/KotakNeoCredential";
-import GithubSettings from "./pages/Tables/GithubSettings";
-import RiskManagement from "./pages/Tables/RiskManagement";
+
 import UserLayout from "./layout/UserLayout";
 
 export default function App() {
@@ -268,14 +267,14 @@ export default function App() {
             <Route path="/admin/broker" element={<ProtectedRoute><BrokerPage /></ProtectedRoute>} />
             <Route path="/admin/holding/order" element={<ProtectedRoute><HoldingOrderAdmin /></ProtectedRoute>} />
 
-            <Route path="/admin/platform" element={<ProtectedRoute><PlatformSettingsPage /></ProtectedRoute>} />
+           
 
             <Route path="/admincheckuser/deshboard" element={<ProtectedRoute><AdminCheckUserDeshboard /></ProtectedRoute>} />
 
 
 
 
-  <Route path="/admin/github" element={<ProtectedRoute><GithubSettings  /></ProtectedRoute>} />
+
 
 
 
@@ -292,17 +291,17 @@ export default function App() {
 
 
 
-         {/* <Route path="/admin/riskconfig" element={<RiskConfigPage />} /> */}
 
 
-           <Route path="/admin/riskconfig" element={<RiskManagement />} />
+
+
 
 
 
 
           <Route path="/admin/instrument" element={<ProtectedRoute><InstrumentFormAdmin /></ProtectedRoute>} />
 
-            <Route path="/admin/watch" element={<ProtectedRoute><WatchList /></ProtectedRoute>} />
+        
 
            {/* <Route path="/admin/order" element={<ProtectedRoute><OrderTables /></ProtectedRoute>} /> */}
             <Route path="/admin/trades" element={<ProtectedRoute><TradeAdmin /></ProtectedRoute>} />
@@ -312,7 +311,7 @@ export default function App() {
 
 
             <Route path="/all-users" element={<ProtectedRoute><AllUser /></ProtectedRoute>} />
-             <Route path="/admin/user-report" element={<ProtectedRoute><UserReport /></ProtectedRoute>} />
+             {/* <Route path="/admin/user-report" element={<ProtectedRoute><UserReport /></ProtectedRoute>} /> */}
 
               <Route path="/admin/user-clone" element={<ProtectedRoute><UserClone /></ProtectedRoute>} />
               <Route path="/admin/user-session" element={<ProtectedRoute><UserSession /></ProtectedRoute>} />

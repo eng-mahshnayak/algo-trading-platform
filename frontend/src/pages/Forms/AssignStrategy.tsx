@@ -63,7 +63,7 @@ const AssignStrategy: React.FC = () => {
       filter: false,
     },
     {
-      headerName: "Strategy Name",
+      headerName: "Group Name",
       field: "strategyName",
       flex: 1,
       minWidth: 200,
@@ -78,32 +78,8 @@ const AssignStrategy: React.FC = () => {
         </div>
       ),
     },
-    {
-      headerName: "Description",
-      field: "strategyDis",
-      flex: 1.5,
-      minWidth: 250,
-      filter: true,
-      sortable: true,
-      cellRenderer: (params: any) => (
-        <div className="flex flex-col">
-          <span className="text-sm text-gray-600">{params.value || "-"}</span>
-        </div>
-      ),
-    },
-    {
-      headerName: "Max Lot Size",
-      field: "maxLotSize",
-      width: 130,
-      minWidth: 120,
-      filter: true,
-      sortable: true,
-      cellRenderer: (params: any) => (
-        <span className="inline-flex items-center gap-1 px-2.5 py-1 bg-gray-100 rounded-lg text-sm font-medium text-gray-700">
-          {params.value !== null && params.value !== undefined ? params.value : "Unlimited"}
-        </span>
-      ),
-    },
+   
+   
     {
       headerName: "Actions",
       width: 120,
@@ -207,12 +183,12 @@ useEffect(() => {
     e.preventDefault();
 
     if (!strategyName.trim()) {
-      return toast.error("Please enter a strategy name");
+      return toast.error("Please enter a Group name");
     }
 
     if (isDuplicateName(strategyName)) {
       return toast.error(
-        `Strategy with name "${strategyName}" already exists. Please use a different name.`
+        `Group with name "${strategyName}" already exists. Please use a different name.`
       );
     }
 
@@ -237,7 +213,7 @@ useEffect(() => {
       });
 
       if (res.data.status === true) {
-        toast.success("Strategy created successfully!");
+        toast.success("Group created successfully!");
         setStrategyName("");
         setStrategyDis("");
         setMaxLotSize("");
@@ -248,7 +224,7 @@ useEffect(() => {
       }
     } catch (error: any) {
       const errorMessage =
-        error.response?.data?.message || error.message || "Failed to create strategy";
+        error.response?.data?.message || error.message || "Failed to create Group";
       toast.error(errorMessage);
     } finally {
       setIsCreating(false);
@@ -272,7 +248,7 @@ useEffect(() => {
     ) {
       if (isDuplicateName(editName, editingStrategy.id)) {
         return toast.error(
-          `Strategy with name "${editName}" already exists. Please use a different name.`
+          `Group with name "${editName}" already exists. Please use a different name.`
         );
       }
     }
@@ -299,7 +275,7 @@ useEffect(() => {
       });
 
       if (res.data.status === true) {
-        toast.success("Strategy updated successfully!");
+        toast.success("Group updated successfully!");
         setIsEditModalOpen(false);
         setEditingStrategy(null);
         fetchStrategies();
@@ -308,7 +284,7 @@ useEffect(() => {
       }
     } catch (error: any) {
       const errorMessage =
-        error.response?.data?.message || error.message || "Failed to update strategy";
+        error.response?.data?.message || error.message || "Failed to update Group";
       toast.error(errorMessage);
     } finally {
       setIsUpdating(false);
@@ -316,7 +292,7 @@ useEffect(() => {
   };
 
   const handleDelete = async (id: number) => {
-    if (!window.confirm("Are you sure you want to delete this strategy?"))
+    if (!window.confirm("Are you sure you want to delete this Group?"))
       return;
 
     try {
@@ -329,11 +305,11 @@ useEffect(() => {
       });
 
       if (res.data.status === true) {
-        toast.success("Strategy deleted successfully!");
+        toast.success("Group deleted successfully!");
         fetchStrategies();
       }
     } catch (error: any) {
-      toast.error(error.message || "Failed to delete strategy");
+      toast.error(error.message || "Failed to delete Group");
     }
   };
 
@@ -364,7 +340,7 @@ useEffect(() => {
             <div className="p-2 bg-gradient-to-r from-[#FB3800] to-orange-500 rounded-xl">
               <FiActivity className="text-white" size={24} />
             </div>
-            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Strategy Management</h1>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-800">Group Management</h1>
           </div>
           <p className="text-gray-500 text-sm ml-12">
             Create and manage trading strategies with lot size limits
@@ -376,7 +352,7 @@ useEffect(() => {
           <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-gray-400 uppercase">Total Strategies</p>
+                <p className="text-xs text-gray-400 uppercase">Total Groups</p>
                 <p className="text-2xl font-bold text-gray-800 mt-1">{totalStrategies}</p>
               </div>
               <div className="p-2 bg-blue-50 rounded-lg">
@@ -430,7 +406,7 @@ useEffect(() => {
                 <FiSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={16} />
                 <input
                   type="text"
-                  placeholder="Search by strategy name or description..."
+                  placeholder="Search by group name or description..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] transition-all"
@@ -443,7 +419,7 @@ useEffect(() => {
               className="flex items-center gap-2 px-4 py-2.5 bg-gradient-to-r from-[#FB3800] to-orange-500 text-white rounded-lg hover:from-orange-500 hover:to-[#FB3800] transition-all shadow-sm"
             >
               <FiPlus size={16} />
-              Create Strategy
+              Create Group
             </button>
 
             <button
@@ -474,17 +450,17 @@ useEffect(() => {
               <FiActivity className="w-10 h-10 text-gray-400" />
             </div>
             <h3 className="text-xl font-bold text-gray-700 mb-2">
-              No strategies yet
+              No Groups yet
             </h3>
             <p className="text-gray-500 max-w-md mx-auto mb-6">
-              Create your first trading strategy to get started
+              Create your first trading group to get started
             </p>
             <button
               onClick={() => setIsCreateModalOpen(true)}
               className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#FB3800] to-orange-500 text-white rounded-lg hover:from-orange-500 hover:to-[#FB3800] transition-all shadow-sm"
             >
               <FiPlus size={16} />
-              Create Strategy
+              Create Group
             </button>
           </div>
         )}
@@ -524,8 +500,8 @@ useEffect(() => {
                   <FiPlus className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-white">Create Strategy</h2>
-                  <p className="text-orange-100 text-sm">Add a new trading strategy</p>
+                  <h2 className="text-lg font-semibold text-white">Create Group</h2>
+                  <p className="text-orange-100 text-sm">Add a new trading group</p>
                 </div>
               </div>
               <button
@@ -539,48 +515,22 @@ useEffect(() => {
             <form onSubmit={handleCreate} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Strategy Name *
+                  Group Name *
                 </label>
                 <input
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] transition-all outline-none"
                   value={strategyName}
                   onChange={(e) => setStrategyName(e.target.value)}
-                  placeholder="Enter strategy name"
+                  placeholder="Enter group name"
                   required
                   disabled={isCreating}
                 />
-                <p className="text-xs text-gray-500 mt-1">Strategy name must be unique</p>
+                <p className="text-xs text-gray-500 mt-1">Group name must be unique</p>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Strategy Description
-                </label>
-                <textarea
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] transition-all outline-none resize-none"
-                  value={strategyDis}
-                  onChange={(e) => setStrategyDis(e.target.value)}
-                  placeholder="Enter strategy description"
-                  rows={3}
-                  disabled={isCreating}
-                />
-              </div>
+           
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Max Lot Size
-                </label>
-                <input
-                  type="number"
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#FB3800]/20 focus:border-[#FB3800] transition-all outline-none"
-                  value={maxLotSize}
-                  onChange={(e) => setMaxLotSize(e.target.value === "" ? "" : Number(e.target.value))}
-                  placeholder="Enter max lot size (optional)"
-                  min="0"
-                  disabled={isCreating}
-                />
-                <p className="text-xs text-gray-500 mt-1">Maximum lot size allowed for this strategy</p>
-              </div>
+             
 
               <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 mt-4">
                 <button
@@ -604,7 +554,7 @@ useEffect(() => {
                   ) : (
                     <>
                       <Save size={14} />
-                      Create Strategy
+                      Create Group
                     </>
                   )}
                 </button>
@@ -624,8 +574,8 @@ useEffect(() => {
                   <MdOutlineEditNote className="w-5 h-5 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg font-semibold text-white">Update Strategy</h2>
-                  <p className="text-blue-100 text-sm">Edit strategy details</p>
+                  <h2 className="text-lg font-semibold text-white">Update Group</h2>
+                  <p className="text-blue-100 text-sm">Edit group details</p>
                 </div>
               </div>
               <button
@@ -639,7 +589,7 @@ useEffect(() => {
             <form onSubmit={handleUpdate} className="p-6 space-y-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Strategy Name *
+                  Group Name *
                 </label>
                 <input
                   className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
@@ -648,36 +598,11 @@ useEffect(() => {
                   required
                   disabled={isUpdating}
                 />
-                <p className="text-xs text-gray-500 mt-1">Strategy name must be unique</p>
+                <p className="text-xs text-gray-500 mt-1">Group name must be unique</p>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Strategy Description
-                </label>
-                <textarea
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none resize-none"
-                  value={editDis}
-                  onChange={(e) => setEditDis(e.target.value)}
-                  rows={3}
-                  disabled={isUpdating}
-                />
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Max Lot Size
-                </label>
-                <input
-                  type="number"
-                  className="w-full px-4 py-2.5 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all outline-none"
-                  value={editMaxLotSize}
-                  onChange={(e) => setEditMaxLotSize(e.target.value === "" ? "" : Number(e.target.value))}
-                  min="0"
-                  disabled={isUpdating}
-                />
-                <p className="text-xs text-gray-500 mt-1">Maximum lot size allowed for this strategy</p>
-              </div>
+             
+            
 
               <div className="flex justify-end gap-3 pt-4 border-t border-gray-100 mt-4">
                 <button
@@ -699,7 +624,7 @@ useEffect(() => {
                       Updating...
                     </>
                   ) : (
-                    "Update Strategy"
+                    "Update Group"
                   )}
                 </button>
               </div>
